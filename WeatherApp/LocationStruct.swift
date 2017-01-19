@@ -10,7 +10,7 @@ import Foundation
 import MapKit
 import SnackKit
 
-public struct Location{
+public struct UserLocation{
  
     var createDate:Date?
     var modifiedDate:Date?

@@ -23,8 +23,8 @@ class WorkingListCell: UITableViewCell, UICollectionViewDelegate,UICollectionVie
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.vmHome.circled()
-        self.vmOffice.circled()
+        self.vmHome.circle()
+        self.vmOffice.circle()
         
         self.lblHome.text = "Home"
         self.lblOffice.text = "Office"

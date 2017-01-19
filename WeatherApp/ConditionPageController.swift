@@ -48,6 +48,8 @@ class ConditionPageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.tableView.delegate = self
+        
         self.tableView.separatorStyle = .none
         self.tableView.backgroundColor = .clear
         self.tableView.tableFooterView = UIView()
@@ -131,5 +133,19 @@ class ConditionPageController: UITableViewController {
                 StaticFactory.currentPartOfDay() == PartsOfDay.Afternoon ? forecast.forecastText[1].description : forecast.forecastText[0].description)
             
         }
+    }
+    
+    // MARK : UITableView
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        if indexPath.row == 5 {
+            return CGFloat(50.0)
+        }
+        
+        if indexPath.row == 5 {
+            return CGFloat(80.0)
+        }
+
+        return CGFloat(40)
     }
 }

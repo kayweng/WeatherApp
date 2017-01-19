@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Locations" representedClassName="Locations" syncable="YES" codeGenerationType="class">
+    <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastSyncOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCountry" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,20 +11,28 @@
         <attribute name="locationType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Weather" inverseName="location" inverseEntity="Weather" syncable="YES"/>
     </entity>
-    <entity name="Weathers" representedClassName="Weathers" syncable="YES" codeGenerationType="class">
+    <entity name="Weather" representedClassName="Weather" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastSyncOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="weatherDay" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="weatherHour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="weatherDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="weatherID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="weatherMonth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="weatherObject" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="weatherYear" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Locations" syncable="YES"/>
+        <relationship name="detail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherDetail" inverseName="weather" inverseEntity="WeatherDetail" syncable="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="weather" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <entity name="WeatherDetail" representedClassName="WeatherDetail" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastSyncOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="wdID" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="wdResult" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Weather" inverseName="detail" inverseEntity="Weather" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Locations" positionX="-63" positionY="-18" width="128" height="180"/>
-        <element name="Weathers" positionX="-54" positionY="63" width="128" height="180"/>
+        <element name="Location" positionX="196" positionY="-126" width="128" height="208"/>
+        <element name="Weather" positionX="-2" positionY="-171" width="128" height="148"/>
+        <element name="WeatherDetail" positionX="-63" positionY="108" width="128" height="133"/>
     </elements>
 </model>

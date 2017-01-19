@@ -68,8 +68,13 @@ class WeatherInfoPagesController: UIPageViewController, UIPageViewControllerDele
     
     public func startPagesSpining(){
         
-        self.timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(WeatherInfoPagesController.shiftPage), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(WeatherInfoPagesController.shiftPage), userInfo: nil, repeats: true)
         
+    }
+    
+    public func stopPageSpining(){
+        self.timer.invalidate()
+        self.timer = Timer()
     }
     
     @objc private func shiftPage(){
@@ -117,6 +122,8 @@ extension WeatherInfoPagesController: UIPageViewControllerDataSource {
             return nil
         }
         
+        self.stopPageSpining()
+        
         let previousIndex = viewControllerIndex - 1 < 0 ? pages.count - 1 : viewControllerIndex - 1
         self.currentPageIndex = previousIndex
         
@@ -141,10 +148,12 @@ extension WeatherInfoPagesController: UIPageViewControllerDataSource {
             return nil
         }
         
+        self.stopPageSpining()
+        
         let nextIndex = viewControllerIndex + 1 >= pages.count ? 0 : viewControllerIndex + 1
         let orderedViewControllersCount = pages.count
         
-        self.currentPageIndex = nextIndex
+        //self.currentPageIndex = nextIndex
         
         guard orderedViewControllersCount != nextIndex else {
             return pages.first

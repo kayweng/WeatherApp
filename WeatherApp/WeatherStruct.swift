@@ -290,7 +290,7 @@ public struct PlannerResult{
                         (avgL["C"] as! String, avgL["F"] as! String, ""),
                         (maxL["C"] as! String, maxL["F"] as! String, ""))
             
-            condition = cc["cond"] as! String
+            condition = cc["cond"] as? String
             
             //chanceofsultryday
             let sultry = cof["chanceofsultryday"] as! JSONDictionary

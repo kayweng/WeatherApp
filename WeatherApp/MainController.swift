@@ -39,7 +39,7 @@ class MainController: UIViewController {
     var counter:Int = 0
     var timer = Timer()
     var isExpand = false
-    var location:Location?
+    var location:UserLocation?
     var weatherDesc:String = ""{
         didSet{
             self.lblConditionDesc.text = weatherDesc
@@ -100,8 +100,13 @@ class MainController: UIViewController {
             self.vwDetails.layoutIfNeeded()
             self.mainView.layoutIfNeeded()
             
-            if let _ = self.container, self.isExpand, let pCtrl = self.container!.pageController{
-                pCtrl.startPagesSpining()
+            if let _ = self.container, let pCtrl = self.container!.pageController{
+                
+                if self.isExpand{
+                    pCtrl.startPagesSpining()
+                }else{
+                    pCtrl.stopPageSpining()
+                }
             }
         }
         
@@ -145,7 +150,7 @@ class MainController: UIViewController {
         LocationManager.shared.GetNearestCity { (json) in
             
             DispatchQueue.main.async(){
-                self.location = Location(address: json)
+                self.location = UserLocation(address: json)
                 self.lblPlaceName.text = self.location!.city
                 gCountryCode = self.location!.countryCode!
                 
