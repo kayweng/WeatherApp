@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="gTV-IL-0wX" customClass="WeatherIconCell" customModule="WeatherApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Storm_25" translatesAutoresizingMaskIntoConstraints="NO" id="By0-db-Lwd">
+                        <rect key="frame" x="13" y="4" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="A8o-AU-m0l"/>
+                            <constraint firstAttribute="width" constant="25" id="wbp-Ho-nW5"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8P-Dx-0fQ" userLabel="lblHome">
+                        <rect key="frame" x="8" y="34" width="34" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="g8P-Dx-0fQ" secondAttribute="trailing" constant="8" id="7P4-fe-tky"/>
+                <constraint firstItem="g8P-Dx-0fQ" firstAttribute="top" secondItem="By0-db-Lwd" secondAttribute="bottom" constant="5" id="LPT-z7-95X"/>
+                <constraint firstItem="g8P-Dx-0fQ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="Zfr-EQ-N0Y"/>
+                <constraint firstItem="g8P-Dx-0fQ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="dm0-nX-VYi"/>
+                <constraint firstAttribute="bottom" secondItem="g8P-Dx-0fQ" secondAttribute="bottom" constant="4" id="lX0-io-Ni1"/>
+                <constraint firstItem="By0-db-Lwd" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="mms-v3-n3r"/>
+                <constraint firstItem="By0-db-Lwd" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="vqN-MQ-H5e"/>
+            </constraints>
+            <connections>
+                <outlet property="imgIcon" destination="By0-db-Lwd" id="0wv-QM-SKI"/>
+                <outlet property="lblRemark" destination="g8P-Dx-0fQ" id="tdi-0D-Adu"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Storm_25" width="25" height="25"/>
+    </resources>
+</document>

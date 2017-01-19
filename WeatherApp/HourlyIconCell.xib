@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="gTV-IL-0wX" customClass="HourlyIconCell" customModule="WeatherApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="70" height="100"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="70" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="32 / 26" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8bo-wA-2d9">
+                        <rect key="frame" x="0.0" y="79" width="70" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="D3k-qK-skP"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gi0-f1-x8T">
+                        <rect key="frame" x="0.0" y="15" width="70" height="27"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Now" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMy-Dp-dfG">
+                        <rect key="frame" x="0.0" y="0.0" width="70" height="15"/>
+                        <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="8Oa-V0-jAT"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CloudFlare" translatesAutoresizingMaskIntoConstraints="NO" id="bjj-3f-ecL">
+                        <rect key="frame" x="19" y="47" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="32" id="XTM-qv-GCt"/>
+                            <constraint firstAttribute="width" constant="32" id="haP-0j-cSO"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="bjj-3f-ecL" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="864-2t-8d3"/>
+                <constraint firstItem="bjj-3f-ecL" firstAttribute="top" secondItem="gi0-f1-x8T" secondAttribute="bottom" constant="5" id="C7J-FQ-qmX"/>
+                <constraint firstAttribute="trailing" secondItem="CMy-Dp-dfG" secondAttribute="trailing" id="JbU-Kb-ld4"/>
+                <constraint firstItem="gi0-f1-x8T" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="MGZ-yZ-wkj"/>
+                <constraint firstItem="gi0-f1-x8T" firstAttribute="top" secondItem="CMy-Dp-dfG" secondAttribute="bottom" id="RmU-n1-nI1"/>
+                <constraint firstAttribute="trailing" secondItem="gi0-f1-x8T" secondAttribute="trailing" id="WSW-aA-fWT"/>
+                <constraint firstItem="CMy-Dp-dfG" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="XUC-Zl-fav"/>
+                <constraint firstAttribute="trailing" secondItem="8bo-wA-2d9" secondAttribute="trailing" id="aSR-C4-L5Y"/>
+                <constraint firstItem="8bo-wA-2d9" firstAttribute="top" secondItem="bjj-3f-ecL" secondAttribute="bottom" id="fBk-0a-sVO"/>
+                <constraint firstItem="8bo-wA-2d9" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="nb0-LU-Okr"/>
+                <constraint firstItem="CMy-Dp-dfG" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="oxV-GS-7Sr"/>
+                <constraint firstAttribute="bottom" secondItem="8bo-wA-2d9" secondAttribute="bottom" id="xMR-bj-eG7"/>
+            </constraints>
+            <connections>
+                <outlet property="imgHour" destination="bjj-3f-ecL" id="5tQ-kK-aVK"/>
+                <outlet property="lblDay" destination="CMy-Dp-dfG" id="ARG-z7-n2y"/>
+                <outlet property="lblHour" destination="gi0-f1-x8T" id="DFP-6S-y5f"/>
+                <outlet property="lblHourTemp" destination="8bo-wA-2d9" id="sv7-SL-ZRb"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="CloudFlare" width="50" height="50"/>
+    </resources>
+</document>
