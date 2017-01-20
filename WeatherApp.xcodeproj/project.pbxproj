@@ -33,6 +33,9 @@
 		BA2301461E312417003F7C8B /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2301401E312417003F7C8B /* Location+CoreDataProperties.swift */; };
 		BA2301471E312417003F7C8B /* Weather+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2301411E312417003F7C8B /* Weather+CoreDataClass.swift */; };
 		BA2301481E312417003F7C8B /* Weather+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2301421E312417003F7C8B /* Weather+CoreDataProperties.swift */; };
+		BA23014A1E319356003F7C8B /* LocationRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2301491E319356003F7C8B /* LocationRepo.swift */; };
+		BA23014C1E319361003F7C8B /* WeatherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA23014B1E319361003F7C8B /* WeatherRepo.swift */; };
+		BA23014E1E31936C003F7C8B /* WeatherDetailRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA23014D1E31936C003F7C8B /* WeatherDetailRepo.swift */; };
 		BA2F78B51DF0578A00386A70 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2F78B41DF0578A00386A70 /* Enums.swift */; };
 		BA41944D1DF70986003F15E4 /* SnackKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BAE0DE101DEF37A000A8763A /* SnackKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BAC6F7D61E1D57A100AB7139 /* WorkingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC6F7D41E1D57A100AB7139 /* WorkingListCell.swift */; };
@@ -98,6 +101,9 @@
 		BA2301401E312417003F7C8B /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		BA2301411E312417003F7C8B /* Weather+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Weather+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BA2301421E312417003F7C8B /* Weather+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Weather+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		BA2301491E319356003F7C8B /* LocationRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationRepo.swift; sourceTree = "<group>"; };
+		BA23014B1E319361003F7C8B /* WeatherRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherRepo.swift; sourceTree = "<group>"; };
+		BA23014D1E31936C003F7C8B /* WeatherDetailRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherDetailRepo.swift; sourceTree = "<group>"; };
 		BA2F78B41DF0578A00386A70 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		BAC6F7D41E1D57A100AB7139 /* WorkingListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkingListCell.swift; sourceTree = "<group>"; };
 		BAC6F7D51E1D57A100AB7139 /* WorkingListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WorkingListCell.xib; sourceTree = "<group>"; };
@@ -165,6 +171,9 @@
 		BA04C3E61E1772B70089CDFC /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				BA2301491E319356003F7C8B /* LocationRepo.swift */,
+				BA23014B1E319361003F7C8B /* WeatherRepo.swift */,
+				BA23014D1E31936C003F7C8B /* WeatherDetailRepo.swift */,
 			);
 			name = Repository;
 			sourceTree = "<group>";
@@ -400,12 +409,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA23014C1E319361003F7C8B /* WeatherRepo.swift in Sources */,
 				BAC6F7F61E2223DA00AB7139 /* ConditionPageController.swift in Sources */,
 				BA2301181E2D2E0A003F7C8B /* Condition2PageController.swift in Sources */,
 				BAD0D47D1DEF032B00E2BA09 /* WeatherAPI.swift in Sources */,
 				BAE2DE261E268B1600520045 /* StaticFactory.swift in Sources */,
 				BA2301461E312417003F7C8B /* Location+CoreDataProperties.swift in Sources */,
 				BAC6F7E91E1EA20300AB7139 /* WeatherIconCell.swift in Sources */,
+				BA23014E1E31936C003F7C8B /* WeatherDetailRepo.swift in Sources */,
 				BA04C3E81E18B0620089CDFC /* MainController.swift in Sources */,
 				BAC6F7EE1E2141F800AB7139 /* Extensions.swift in Sources */,
 				BA23011E1E2E56C1003F7C8B /* HourlyDataSource.swift in Sources */,
@@ -427,6 +438,7 @@
 				BAC6F7D61E1D57A100AB7139 /* WorkingListCell.swift in Sources */,
 				BAD0D4931DEF138F00E2BA09 /* WeatherStruct.swift in Sources */,
 				BA2301231E2FAA13003F7C8B /* DailyIconCell.swift in Sources */,
+				BA23014A1E319356003F7C8B /* LocationRepo.swift in Sources */,
 				BA04C3E51E1771170089CDFC /* LocationStruct.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
