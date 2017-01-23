@@ -12,6 +12,8 @@ import SnackKit
 
 protocol IRepositoryBase {
     
+    func Create(entity: Entity) -> AnyObject
+    func Delete(pred:NSPredicate, in entity:Entity) throws -> Bool
     func Save() throws -> Bool
     func RollBack()
     func GenerateUUID()->String
@@ -21,7 +23,7 @@ class RepositoryBase : IRepositoryBase {
     
     var context:NSManagedObjectContext!
 
-    class var sharedInstance: RepositoryBase {
+    class var shared: RepositoryBase {
     
         struct Static {
             static var instance: RepositoryBase? = nil
@@ -35,24 +37,43 @@ class RepositoryBase : IRepositoryBase {
     }
     
     init(){
-        self.context = AppCoreDataHelper.sharedInstance.classContext
+        self.context = CoreDataManager.shared.managedObjectContext!
+    }
+    
+
+    internal func Create(entity: Entity) -> AnyObject {
+        
+        return CoreDataManager.shared.insertNewObject(forEntityName: entity.rawValue)
+    }
+    
+    internal func Delete(pred: NSPredicate, in entity: Entity) throws -> Bool {
+        
+        guard let record = try CoreDataManager.shared.fetchData(context: self.context, entity: entity.rawValue, predicate: pred) else {
+            return false    // no found
+        }
+        
+        guard CoreDataManager.shared.deleteData(record as AnyObject) else {
+            throw CoreDataError.DeleteError
+        }
+        
+        return true
     }
 
-    func Save() throws -> Bool{
+    internal func Save() throws -> Bool{
         
-        if !AppCoreDataHelper.sharedInstance.saveContext(self.context){
-            AppCoreDataHelper.sharedInstance.rollbackContext(context: self.context)
-            throw CoreDataError.saveError
+        if !CoreDataManager.shared.saveContext(self.context){
+            CoreDataManager.shared.rollbackContext(self.context)
+            throw CoreDataError.SaveError
         }
         
         return true
     }
     
-    func RollBack() {
-        AppCoreDataHelper.sharedInstance.rollbackContext(context: self.context)
+    internal func RollBack() {
+        CoreDataManager.shared.rollbackContext(self.context)
     }
     
-    func GenerateUUID()->String{
+    internal func GenerateUUID()->String{
         return UUID().uuidString
     }
 }

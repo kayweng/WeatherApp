@@ -14,6 +14,7 @@ public struct UserLocation{
  
     var createDate:Date?
     var modifiedDate:Date?
+    var type:LocationType?
     
     //placemark
     var postalCode:String?{

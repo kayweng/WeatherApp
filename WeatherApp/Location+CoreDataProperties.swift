@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  WeatherApp
 //
-//  Created by kay weng on 20/01/2017.
+//  Created by kay weng on 23/01/2017.
 //  Copyright © 2017 snackcode.org. All rights reserved.
 //
 
@@ -17,6 +17,7 @@ extension Location {
     }
 
     @NSManaged public var createdOn: NSDate?
+    @NSManaged public var lastSyncOn: NSDate?
     @NSManaged public var latitude: String?
     @NSManaged public var locationCity: String?
     @NSManaged public var locationCountry: String?
@@ -25,7 +26,7 @@ extension Location {
     @NSManaged public var locationType: String?
     @NSManaged public var longitude: String?
     @NSManaged public var modifiedOn: NSDate?
-    @NSManaged public var lastSyncOn: NSDate?
+    @NSManaged public var locationDate: NSDate?
     @NSManaged public var weather: Weather?
 
 }

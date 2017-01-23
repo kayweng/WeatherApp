@@ -9,6 +9,26 @@
 import Foundation
 import UIKit
 
+public enum Entity:String {
+    
+    case Location = "Location"
+    case Weather = "Weather"
+    case WeatherDetail = "WeatherDetail"
+}
+
+public enum WeatherResultType:String{
+    
+    case Astronomy = "Astronomy"
+    case Condition = "Condition"
+    case Forecast = "Forecast"
+    case Forecast10Day = "Forecast10Day"
+    case History = "History"
+    case Hourly = "Hourly"
+    case Planner = "Planner"
+    case Tide = "Tide"
+    case Yesterday = "Yesterday"
+}
+
 public enum WeahterAction:String{
     
     case Alerts = "alerts"
@@ -26,6 +46,7 @@ public enum WeahterAction:String{
 
 public enum LocationType:String{
     
+    case Phone = "phone"
     case Home = "home"
     case Office = "office"
     case Country = "country"

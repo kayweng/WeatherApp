@@ -35,11 +35,12 @@ class MainController: UIViewController {
     
     var container:ContainerController?
     
+    let today:Date = Date().today
     var dHeight = CGFloat(0.0)
     var counter:Int = 0
     var timer = Timer()
     var isExpand = false
-    var location:UserLocation?
+    var userLocation:UserLocation?
     var weatherDesc:String = ""{
         didSet{
             self.lblConditionDesc.text = weatherDesc
@@ -68,11 +69,11 @@ class MainController: UIViewController {
         self.tblTaskingList.translatesAutoresizingMaskIntoConstraints = false
         
         self.resetFieldValues()
-        self.refreshWeatherInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.initConstantHeights()
+        self.refreshWeatherInfo()
     }
     
     override func didReceiveMemoryWarning() {
@@ -82,9 +83,11 @@ class MainController: UIViewController {
     
     @IBAction func onPressMoreInfo(sender:UIButton){
 
-        UIView.animate(withDuration: 0.5) { 
+        UIView.animate(withDuration: 0.4) {
             
             self.isExpand = !self.isExpand
+
+            let sec:Int = self.isExpand ? 0 : 1
             
             if self.isExpand{
                 self.constWeatherHeight.constant = CGFloat(self.mainView.frame.height)
@@ -94,11 +97,15 @@ class MainController: UIViewController {
                 self.constDetailHeight.constant = CGFloat(0.0)
             }
 
-            self.lblFeelLike.isHidden = self.isExpand
-            self.imgWeatherInfo.isHidden = self.isExpand
             self.changeButtonImage()
             self.vwDetails.layoutIfNeeded()
             self.mainView.layoutIfNeeded()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(sec), execute: {
+                
+                self.lblFeelLike.isHidden = self.isExpand
+                self.imgWeatherInfo.isHidden = self.isExpand
+            })
             
             if let _ = self.container, let pCtrl = self.container!.pageController{
                 
@@ -127,11 +134,11 @@ class MainController: UIViewController {
         self.isExpand = false
 
         self.imgWeatherInfo.isHidden = true
-        self.lblPlaceName.text = ""
-        self.lblFeelLike.text = ""
+        self.lblPlaceName.reset()
+        self.lblFeelLike.reset()
         self.lblTemperature.text = "- -"
-        self.lblConditionDesc.text = ""
-        self.lblMaxMinTemperature.text = ""
+        self.lblConditionDesc.reset()
+        self.lblMaxMinTemperature.reset()
         self.lblToday.text = Date().now.dayName
         self.changeButtonImage()
         
@@ -146,20 +153,39 @@ class MainController: UIViewController {
     }
     
     private func refreshWeatherInfo(){
-     
+
         LocationManager.shared.GetNearestCity { (json) in
+
+            let currentLocation = UserLocation(address: json)
+            let isNewLocation:Bool = self.userLocation == nil ? true : (self.userLocation!.city == currentLocation.city)
             
-            DispatchQueue.main.async(){
-                self.location = UserLocation(address: json)
-                self.lblPlaceName.text = self.location!.city
-                gCountryCode = self.location!.countryCode!
+            self.userLocation = currentLocation
+            self.lblPlaceName.text = self.userLocation!.city
+            gCountryCode = self.userLocation!.countryCode!
+        
+            if isNewLocation{
+                //1. New Location
+                let newLocation = try! LocationRepo.shared.Create(currentLocation)
+                let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
                 
-                self.retrieveWeatherInfo(location: self.location!.city!)
+                self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
+                
+                _ = try! RepositoryBase.shared.Save()
+            }else{
+                //2. Same Location
+                
+                
             }
         }
     }
-    
-    private func retrieveWeatherInfo(location:String){
+
+    private func getWeatherSavedResult(at location:Location){
+        
+    }
+
+    private func getWeatherAPIResults(at location:Location, linkTo:Weather){
+       
+        let location:String = location.locationCity!
         
         WeatherAPI.shared.GetCondition(at: location) { (result) in
             
@@ -167,6 +193,8 @@ class MainController: UIViewController {
                 
                 self.conditions = result.item[0]
                 self.populateConditionsResult()
+                
+                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions as AnyObject, type: .Condition, header: linkTo)
             }
         }
         
@@ -176,15 +204,19 @@ class MainController: UIViewController {
                 
                 self.astronomy = result.item[0]
                 self.populateAstronomyResult()
+                
+                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy as AnyObject, type: .Astronomy, header: linkTo)
             }
         }
         
         WeatherAPI.shared.GetForecast(at: location) { (result) in
-         
+            
             DispatchQueue.main.async {
                 
                 self.forecast = result.item[0]
                 self.populateForecastResult()
+                
+                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast as AnyObject, type: .Forecast, header: linkTo)
             }
         }
         
@@ -194,6 +226,8 @@ class MainController: UIViewController {
                 
                 self.hourly = result.item[0]
                 self.populateHourlyResult()
+                
+                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly as AnyObject, type: .Hourly, header: linkTo)
             }
         }
         
@@ -203,10 +237,12 @@ class MainController: UIViewController {
                 
                 self.daily = result.item[0]
                 self.populateForecast10DaysResult()
+                
+                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily as AnyObject, type: .Forecast10Day, header: linkTo)
             }
         })
     }
-    
+
     private func populateConditionsResult(){
         
         if let cond = self.conditions{

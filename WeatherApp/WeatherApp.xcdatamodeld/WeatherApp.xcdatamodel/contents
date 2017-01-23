@@ -6,12 +6,13 @@
         <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCountry" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="locationID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Weather" inverseName="location" inverseEntity="Weather" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Weather" syncable="YES"/>
     </entity>
     <entity name="Weather" representedClassName="Weather" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -19,20 +20,21 @@
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="weatherDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="weatherID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="detail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherDetail" inverseName="weather" inverseEntity="WeatherDetail" syncable="YES"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="weather" inverseEntity="Location" syncable="YES"/>
+        <relationship name="detail" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeatherDetail" inverseName="weather" inverseEntity="WeatherDetail" syncable="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>
     </entity>
     <entity name="WeatherDetail" representedClassName="WeatherDetail" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastSyncOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="wdID" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="wdID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wdResult" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="wdType" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Weather" inverseName="detail" inverseEntity="Weather" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Location" positionX="196" positionY="-126" width="128" height="208"/>
-        <element name="Weather" positionX="-2" positionY="-171" width="128" height="148"/>
-        <element name="WeatherDetail" positionX="-63" positionY="108" width="128" height="133"/>
+        <element name="Location" positionX="196" positionY="-126" width="128" height="225"/>
+        <element name="Weather" positionX="-2" positionY="-171" width="128" height="150"/>
+        <element name="WeatherDetail" positionX="-63" positionY="108" width="128" height="150"/>
     </elements>
 </model>

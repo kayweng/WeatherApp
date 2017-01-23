@@ -11,6 +11,9 @@ import CoreData
 import SnackKit
 
 let dsymbol = "°"   //degree symbol
+let delegate = UIApplication.shared.delegate
+let sb: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+
 var gTemperatureUnit = SnackKit.TemperatureUnit.Celsius
 var gCountryCode = AppLocale.countryCode
 
@@ -20,10 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-
+        
+        SnackKit.gCoreDataFileName = "WeatherApp"
+        
         self.applicationUIConfigure()
         
         return true

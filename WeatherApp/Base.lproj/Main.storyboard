@@ -68,7 +68,7 @@
                                             <constraint firstAttribute="height" constant="30" id="Jh7-h6-ZrI"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kuala Lumpur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BAt-XI-xkU" userLabel="locationName">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BAt-XI-xkU" userLabel="locationName">
                                         <rect key="frame" x="36" y="575" width="331" height="20"/>
                                         <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -122,7 +122,7 @@
                                             <constraint firstItem="TYi-eK-g3f" firstAttribute="leading" secondItem="xYs-G9-Vl1" secondAttribute="leading" constant="8" id="riO-dA-Aod"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="feels like 25°" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8jh-VJ-DOH" userLabel="feellike">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8jh-VJ-DOH" userLabel="feellike">
                                         <rect key="frame" x="137" y="183.5" width="130" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="KKZ-6I-Qxz"/>
@@ -131,7 +131,7 @@
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Clear" translatesAutoresizingMaskIntoConstraints="NO" id="enZ-df-7sz" userLabel="imgCondition">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Unknown" translatesAutoresizingMaskIntoConstraints="NO" id="enZ-df-7sz" userLabel="imgCondition">
                                         <rect key="frame" x="113" y="188.5" width="20" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="8k4-9E-qUZ"/>
@@ -242,7 +242,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8cl-t0-HaG" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="yZN-tr-Gnj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yZN-tr-Gnj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -717,7 +717,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Clear" width="50" height="50"/>
         <image name="Double Up_50" width="50" height="50"/>
         <image name="Near Me" width="25" height="25"/>
         <image name="Settings 3" width="32" height="32"/>
