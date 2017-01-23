@@ -154,33 +154,54 @@ class MainController: UIViewController {
     
     private func refreshWeatherInfo(){
 
+        //Retrieve Last Location
+        let lastLocation = try! LocationRepo.shared.GetLocation(.Phone,on: self.today)
+        
+        func createNewWeather(){
+             
+            let newLocation = try! LocationRepo.shared.Create(self.userLocation)
+            let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
+                
+            self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
+                
+            _ = try! RepositoryBase.shared.Save()
+        }
+        
+        func loadLastWeather(at location:Location){
+            self.getWeatherSavedResult(at: location)
+        }
+        
         LocationManager.shared.GetNearestCity { (json) in
 
-            let currentLocation = UserLocation(address: json)
-            let isNewLocation:Bool = self.userLocation == nil ? true : (self.userLocation!.city == currentLocation.city)
+            self.userLocation = UserLocation(address: json)
+            let isNewLocation:Bool = self.lastLocation == nil ? true : (self.lastLocation!.city == currentLocation.city)
             
-            self.userLocation = currentLocation
             self.lblPlaceName.text = self.userLocation!.city
             gCountryCode = self.userLocation!.countryCode!
         
-            if isNewLocation{
-                //1. New Location
-                let newLocation = try! LocationRepo.shared.Create(currentLocation)
-                let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
-                
-                self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
-                
-                _ = try! RepositoryBase.shared.Save()
+            if !isNewLocation{
+                 //Same Location, retrieve Weather data from CoreData If weahter last modifiedOn < 30min elpased
+                if let lastWeatherDate = WeahterRepo.shared.GetWeather(on: self.today, at: lastLocation) {
+                    
+                    let lastModifiedDate = lastWeatherDate.modifiedOn
+                    if lastModfiedOn.differInMinutes(Date().now) < 15{
+                        loadLastWeather()       
+                    }else{
+                        //Last Weahter was expired
+                        createNewWeather()   
+                    }
+                }
             }else{
-                //2. Same Location
-                
-                
+                //New Location
+                createNewWeather()
             }
         }
     }
 
     private func getWeatherSavedResult(at location:Location){
         
+        let weather = WeahterRepo.shared.GetWeather(on: self.today, at:location)
+        let results = WeatherDetailRepo.shared.Get
     }
 
     private func getWeatherAPIResults(at location:Location, linkTo:Weather){
