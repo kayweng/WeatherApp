@@ -2,7 +2,7 @@
 //  WeatherDetail+CoreDataProperties.swift
 //  WeatherApp
 //
-//  Created by kay weng on 22/01/2017.
+//  Created by kay weng on 23/01/2017.
 //  Copyright © 2017 snackcode.org. All rights reserved.
 //
 
@@ -20,7 +20,7 @@ extension WeatherDetail {
     @NSManaged public var lastSyncOn: NSDate?
     @NSManaged public var modifiedOn: NSDate?
     @NSManaged public var wdID: String?
-    @NSManaged public var wdResult: NSObject?
+    @NSManaged public var wdResult: IWeatherResult?
     @NSManaged public var wdType: String?
     @NSManaged public var weather: Weather?
 

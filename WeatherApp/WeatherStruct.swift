@@ -42,8 +42,12 @@ public struct Container<T>{
     var itemDidLoad: ((_ item: [T]) -> Void)?
 }
 
+public class IWeatherResult : NSObject {
+    
+}
+
 //http://api.wunderground.com/api/826830b16b7d2179/astronomy/q/Australia/Sydney.json
-public struct AstronomyResult{
+public class AstronomyResult : IWeatherResult{
     
     var moonPhase:(percentIlluminated:String, ageOfMoon:String, current_time:Time)?
     var sunrise:Time?
@@ -79,7 +83,7 @@ public struct AstronomyResult{
 
 //Returns the current temperature, weather condition, humidity, wind, 'feels like' temperature, barometric pressure, and visibility.
 //http://api.wunderground.com/api/826830b16b7d2179/conditions/q/CA/San_Francisco.json
-public struct ConditionsResult{
+public class ConditionsResult: IWeatherResult{
     
     var displayLocation:(full:String, city:String, country:String, location:Coordination)?
     var observationLocation:(full:String, city:String, country:String, location:Coordination)?
@@ -122,7 +126,7 @@ public struct ConditionsResult{
 //Returns a summary of the weather for the next 3 days. 
 //This includes high and low temperatures, a string text forecast and the conditions.
 //http://api.wunderground.com/api/826830b16b7d2179/forecast/q/CA/San_Francisco.json
-public struct ForecastResult{
+public class ForecastResult: IWeatherResult{
     
     var forecastText:[TextForecast] = []
     var simplyForecast:[SimpleForecast] = []
@@ -180,7 +184,7 @@ public struct ForecastResult{
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/history_20060405/q/CA/San_Francisco.json
-public struct HistoryResult{
+public class HistoryResult: IWeatherResult{
     
     var history:[(date:WDate, temp:Temperature, cond:Conditions)] = []
     
@@ -211,7 +215,7 @@ public struct HistoryResult{
 
 //http://api.wunderground.com/api/826830b16b7d2179/hourly/q/CA/San_Francisco.json
 //http://api.wunderground.com/api/826830b16b7d2179/hourly10day/q/CA/San_Francisco.json
-public struct HourlyResult{
+public class HourlyResult : IWeatherResult{
     
     var hours:[(wDate:WDate, description:DateDescription, high:Temperature, low:Temperature, cond:String, humidity:String, feelLike:Temperature, uvindex:String, wind:Wind)] = []
     
@@ -246,7 +250,7 @@ public struct HourlyResult{
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/planner_07010731/q/CA/San_Francisco.json
-public struct PlannerResult{
+public class PlannerResult : IWeatherResult{
     
     var tripTitle:String?
     var startDate:(date:WDate,wm:DateDescription)?
@@ -350,7 +354,7 @@ public struct PlannerResult{
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/tide/q/CA/San_Francisco.json
-public struct TideResult{
+public class TideResult: IWeatherResult{
     
     var tideInfo:(site:String, coord:Coordination, units:String)?
     var tideSummary:[(date:WDate, type:String, height:String)]?
@@ -365,7 +369,7 @@ public struct TideResult{
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/yesterday/q/CA/San_Francisco.json
-public struct YesterdayResult
+public class YesterdayResult: IWeatherResult
 {
     var date:WDate?
     var observations:[(date:WDate,temp:Temperature, cond:Conditions)] = []

@@ -47,7 +47,7 @@ class MainController: UIViewController {
         }
     }
     var weatherInfo:[(icon:String,value:String)] = []
-   
+    
     //API Results
     var conditions:ConditionsResult?
     var astronomy:AstronomyResult?
@@ -158,13 +158,32 @@ class MainController: UIViewController {
         let lastLocation = try! LocationRepo.shared.GetLocation(.Phone,on: self.today)
         
         func createNewWeather(){
-             
-            let newLocation = try! LocationRepo.shared.Create(self.userLocation)
+            
+            self.userLocation!.type = LocationType.Phone
+            
+            let newLocation = try! LocationRepo.shared.Create(self.userLocation!)
             let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
                 
-            self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
+            self.getWeatherAPIResults(at: newLocation!)
+            
+            DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2.5) {
                 
-            _ = try! RepositoryBase.shared.Save()
+                let nset:NSMutableSet = newWeather!.mutableSetValue(forKey: "detail")
+                
+                let detail1 = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather!)
+                let detail2 = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Condition, header: newWeather!)
+                let detail3 = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Condition, header: newWeather!)
+                let detail4 = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Condition, header: newWeather!)
+                let detail5 = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Condition, header: newWeather!)
+                
+                nset.add(detail1)
+                nset.add(detail2)
+                nset.add(detail3)
+                nset.add(detail4)
+                nset.add(detail5)
+                
+                _ = try! RepositoryBase.shared.Save()
+            }
         }
         
         func loadLastWeather(at location:Location){
@@ -173,38 +192,73 @@ class MainController: UIViewController {
         
         LocationManager.shared.GetNearestCity { (json) in
 
+            var isCreateNewWeather:Bool = false
+            
             self.userLocation = UserLocation(address: json)
-            let isNewLocation:Bool = self.lastLocation == nil ? true : (self.lastLocation!.city == currentLocation.city)
+            let isNewLocation:Bool = lastLocation == nil ? true : (lastLocation?.locationCity != self.userLocation!.city)
             
             self.lblPlaceName.text = self.userLocation!.city
             gCountryCode = self.userLocation!.countryCode!
         
             if !isNewLocation{
                  //Same Location, retrieve Weather data from CoreData If weahter last modifiedOn < 30min elpased
-                if let lastWeatherDate = WeahterRepo.shared.GetWeather(on: self.today, at: lastLocation) {
+                if let lastWeatherDate = try! WeatherRepo.shared.GetWeather(on: self.today, at: lastLocation) {
                     
-                    let lastModifiedDate = lastWeatherDate.modifiedOn
-                    if lastModfiedOn.differInMinutes(Date().now) < 15{
-                        loadLastWeather()       
+                    if let lastModifiedDate = lastWeatherDate.modifiedOn as? Date{
+                        if lastModifiedDate.differInMinutes(Date().now) < 15{
+                            isCreateNewWeather = false
+                        }else{
+                            isCreateNewWeather = true
+                        }
                     }else{
-                        //Last Weahter was expired
-                        createNewWeather()   
+                        isCreateNewWeather = true
                     }
                 }
-            }else{
-                //New Location
+            }
+            
+            if isNewLocation || isCreateNewWeather {
                 createNewWeather()
+            }else{
+                loadLastWeather(at: lastLocation!)
             }
         }
     }
 
     private func getWeatherSavedResult(at location:Location){
         
-        let weather = WeahterRepo.shared.GetWeather(on: self.today, at:location)
-        let results = WeatherDetailRepo.shared.Get
+        if let weather = try! WeatherRepo.shared.GetWeather(on: self.today, at:location) {
+            
+            if let results = WeatherDetailRepo.shared.GetWeatherDetail(on: self.today, header: weather){
+             
+                for re in results{
+                    
+                    let type = WeatherResultType(rawValue: re.wdType!)
+                    
+                    switch type! {
+                    case .Astronomy:
+                        self.astronomy = re.wdResult as? AstronomyResult
+                        self.populateAstronomyResult()
+                    case .Condition:
+                        self.conditions = re.wdResult as? ConditionsResult
+                        self.populateConditionsResult()
+                    case .Forecast:
+                        self.forecast = re.wdResult as? ForecastResult
+                        self.populateForecastResult()
+                    case .Forecast10Day:
+                        self.forecast = re.wdResult as? ForecastResult
+                        self.populateForecast10DaysResult()
+                    case .Hourly:
+                        self.hourly = re.wdResult as? HourlyResult
+                        self.populateHourlyResult()
+                    default:
+                        break
+                    }
+                }
+            }
+        }
     }
 
-    private func getWeatherAPIResults(at location:Location, linkTo:Weather){
+    private func getWeatherAPIResults(at location:Location){
        
         let location:String = location.locationCity!
         
@@ -214,8 +268,7 @@ class MainController: UIViewController {
                 
                 self.conditions = result.item[0]
                 self.populateConditionsResult()
-                
-                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions as AnyObject, type: .Condition, header: linkTo)
+                print("condition population completed !")
             }
         }
         
@@ -225,8 +278,7 @@ class MainController: UIViewController {
                 
                 self.astronomy = result.item[0]
                 self.populateAstronomyResult()
-                
-                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy as AnyObject, type: .Astronomy, header: linkTo)
+                print("astronomy population completed !")
             }
         }
         
@@ -236,8 +288,7 @@ class MainController: UIViewController {
                 
                 self.forecast = result.item[0]
                 self.populateForecastResult()
-                
-                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast as AnyObject, type: .Forecast, header: linkTo)
+                print("forecast population completed !")
             }
         }
         
@@ -247,8 +298,7 @@ class MainController: UIViewController {
                 
                 self.hourly = result.item[0]
                 self.populateHourlyResult()
-                
-                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly as AnyObject, type: .Hourly, header: linkTo)
+                print("hourly population completed !")
             }
         }
         
@@ -258,8 +308,7 @@ class MainController: UIViewController {
                 
                 self.daily = result.item[0]
                 self.populateForecast10DaysResult()
-                
-                _ = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily as AnyObject, type: .Forecast10Day, header: linkTo)
+                print("forecast 10 dayspopulation completed !")
             }
         })
     }

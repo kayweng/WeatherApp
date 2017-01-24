@@ -6,7 +6,7 @@
         <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationCountry" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="locationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationType" optional="YES" attributeType="String" syncable="YES"/>
@@ -18,7 +18,7 @@
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastSyncOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="weatherDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="weatherDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weatherID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="detail" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeatherDetail" inverseName="weather" inverseEntity="WeatherDetail" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>

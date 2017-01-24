@@ -11,11 +11,12 @@ import SnackKit
 
 protocol IWeatherDetailRepo : IRepositoryBase {
     
-    func CreateWeatherDetail(_ result: AnyObject,type:WeatherResultType, header:Weather) -> WeatherDetail
+    func CreateWeatherDetail(_ result: IWeatherResult,type:WeatherResultType, header:Weather) -> WeatherDetail
+    func GetWeatherDetail(on date:Date, header:Weather) -> [WeatherDetail]?
 }
 
 class WeatherDetailRepo : RepositoryBase, IWeatherDetailRepo{
-   
+
     override init() {
         super.init()
     }
@@ -33,16 +34,28 @@ class WeatherDetailRepo : RepositoryBase, IWeatherDetailRepo{
         return Static.instance!
     }
 
-    internal func CreateWeatherDetail(_ result: AnyObject, type:WeatherResultType, header:Weather) -> WeatherDetail{
+    internal func CreateWeatherDetail(_ result: IWeatherResult, type:WeatherResultType, header:Weather) -> WeatherDetail{
         
         let insertedRecord = CoreDataManager.shared.insertNewObject(forEntityName: Entity.WeatherDetail.rawValue) as! WeatherDetail
         
         insertedRecord.wdID = super.GenerateUUID()
-        insertedRecord.wdResult = result as? NSObject
+        insertedRecord.wdResult = result
         insertedRecord.wdType = type.rawValue
         insertedRecord.createdOn = Date().now as NSDate
         insertedRecord.weather = header
         
         return insertedRecord
+    }
+    
+    internal func GetWeatherDetail(on date: Date, header: Weather) -> [WeatherDetail]? {
+        
+        let predicate = NSPredicate(format: "weather == %@", header)
+        let sorts = [NSSortDescriptor(key: "", ascending: true)]
+        
+        guard let details = CoreDataManager.shared.fetchData(entity: Entity.WeatherDetail.rawValue, predicate: predicate, sorting: sorts) else {
+            return nil
+        }
+        
+        return details as? [WeatherDetail]
     }
 }

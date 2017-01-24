@@ -21,12 +21,12 @@ extension Location {
     @NSManaged public var latitude: String?
     @NSManaged public var locationCity: String?
     @NSManaged public var locationCountry: String?
+    @NSManaged public var locationDate: String?
     @NSManaged public var locationID: String?
     @NSManaged public var locationName: String?
     @NSManaged public var locationType: String?
     @NSManaged public var longitude: String?
     @NSManaged public var modifiedOn: NSDate?
-    @NSManaged public var locationDate: NSDate?
     @NSManaged public var weather: Weather?
 
 }
