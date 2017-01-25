@@ -165,11 +165,6 @@ class MainController: UIViewController {
             let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
                 
             self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
-            
-            DispatchQueue.main.async {
-                print("Saving")
-                _ = try! RepositoryBase.shared.Save()
-            }
         }
         
         func loadLastWeather(){
@@ -178,6 +173,11 @@ class MainController: UIViewController {
         
         LocationManager.shared.GetNearestCity { (json) in
 
+            guard json.count > 0 else{
+                //Goto Location Service Disable Screen
+                return
+            }
+            
             var isNewWeather:Bool = true
             
             self.userLocation = UserLocation(address: json)
@@ -310,6 +310,11 @@ class MainController: UIViewController {
                 newWeather.addToDetail(detail)
                 
                 print("forecast 10 days population completed !")
+                
+                DispatchQueue.main.async {
+                    print("Saving")
+                    _ = try! RepositoryBase.shared.Save()
+                }
             }
         })
     }

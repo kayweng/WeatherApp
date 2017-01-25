@@ -140,6 +140,10 @@ public class WeatherStatic{
             return WeatherIcon.Rain.image
         }
         
+        if name == "Chance of Rain"{
+            return WeatherIcon.LightRain.image
+        }
+        
         if name == "Freezing Rain"{
             return WeatherIcon.Sleet.image
         }
@@ -156,7 +160,7 @@ public class WeatherStatic{
             return WeatherIcon.CloudFlare.image
         }
         
-        if name == "Partly Cloudy" || name == "Mostly Cloudy"{
+        if name == "Partly Cloudy" || name == "Mostly Cloudy" || name == "Overcast"{
             return !night ? WeatherIcon.PartlyCloudyDay.image : WeatherIcon.PartlyCloudyNight.image
         }
         
