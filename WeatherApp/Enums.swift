@@ -89,6 +89,8 @@ public enum WeatherIcon{
             return UIImage(named: "Fog Day")!
         case .FogNight:
             return UIImage(named: "Fog Night")!
+        case .Rain:
+            return UIImage(named: "Rain")!
         case .HeavyRain:
             return UIImage(named: "Heavy Rain")!
         case .IntenseRain:

@@ -161,38 +161,24 @@ class MainController: UIViewController {
             
             self.userLocation!.type = LocationType.Phone
             
-            let newLocation = try! LocationRepo.shared.Create(self.userLocation!)
+            let newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
             let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
                 
-            self.getWeatherAPIResults(at: newLocation!)
+            self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
             
-            DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2.5) {
-                
-                let nset:NSMutableSet = newWeather!.mutableSetValue(forKey: "detail")
-                
-                let detail1 = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather!)
-                let detail2 = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Condition, header: newWeather!)
-                let detail3 = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Condition, header: newWeather!)
-                let detail4 = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Condition, header: newWeather!)
-                let detail5 = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Condition, header: newWeather!)
-                
-                nset.add(detail1)
-                nset.add(detail2)
-                nset.add(detail3)
-                nset.add(detail4)
-                nset.add(detail5)
-                
+            DispatchQueue.main.async {
+                print("Saving")
                 _ = try! RepositoryBase.shared.Save()
             }
         }
         
-        func loadLastWeather(at location:Location){
-            self.getWeatherSavedResult(at: location)
+        func loadLastWeather(){
+            self.getWeatherSavedResult(at: lastLocation!)
         }
         
         LocationManager.shared.GetNearestCity { (json) in
 
-            var isCreateNewWeather:Bool = false
+            var isNewWeather:Bool = true
             
             self.userLocation = UserLocation(address: json)
             let isNewLocation:Bool = lastLocation == nil ? true : (lastLocation?.locationCity != self.userLocation!.city)
@@ -205,21 +191,16 @@ class MainController: UIViewController {
                 if let lastWeatherDate = try! WeatherRepo.shared.GetWeather(on: self.today, at: lastLocation) {
                     
                     if let lastModifiedDate = lastWeatherDate.modifiedOn as? Date{
-                        if lastModifiedDate.differInMinutes(Date().now) < 15{
-                            isCreateNewWeather = false
-                        }else{
-                            isCreateNewWeather = true
-                        }
-                    }else{
-                        isCreateNewWeather = true
+                        isNewWeather = lastModifiedDate.elapsedInMinutes(Date().now) < 15 ? false : true
                     }
                 }
             }
             
-            if isNewLocation || isCreateNewWeather {
+            if isNewLocation || isNewWeather {
                 createNewWeather()
             }else{
-                loadLastWeather(at: lastLocation!)
+                //loadLastWeather()
+                createNewWeather()
             }
         }
     }
@@ -258,7 +239,7 @@ class MainController: UIViewController {
         }
     }
 
-    private func getWeatherAPIResults(at location:Location){
+    private func getWeatherAPIResults(at location:Location, linkTo newWeather:Weather){
        
         let location:String = location.locationCity!
         
@@ -268,6 +249,10 @@ class MainController: UIViewController {
                 
                 self.conditions = result.item[0]
                 self.populateConditionsResult()
+                
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather)
+                newWeather.addToDetail(detail)
+                
                 print("condition population completed !")
             }
         }
@@ -278,6 +263,10 @@ class MainController: UIViewController {
                 
                 self.astronomy = result.item[0]
                 self.populateAstronomyResult()
+                
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Condition, header: newWeather)
+                newWeather.addToDetail(detail)
+                
                 print("astronomy population completed !")
             }
         }
@@ -288,6 +277,10 @@ class MainController: UIViewController {
                 
                 self.forecast = result.item[0]
                 self.populateForecastResult()
+                
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Condition, header: newWeather)
+                newWeather.addToDetail(detail)
+                
                 print("forecast population completed !")
             }
         }
@@ -298,6 +291,10 @@ class MainController: UIViewController {
                 
                 self.hourly = result.item[0]
                 self.populateHourlyResult()
+                
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Condition, header: newWeather)
+                newWeather.addToDetail(detail)
+                
                 print("hourly population completed !")
             }
         }
@@ -308,7 +305,11 @@ class MainController: UIViewController {
                 
                 self.daily = result.item[0]
                 self.populateForecast10DaysResult()
-                print("forecast 10 dayspopulation completed !")
+                
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Condition, header: newWeather)
+                newWeather.addToDetail(detail)
+                
+                print("forecast 10 days population completed !")
             }
         })
     }

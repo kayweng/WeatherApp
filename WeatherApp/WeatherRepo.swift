@@ -39,7 +39,7 @@ class WeatherRepo : RepositoryBase, IWeatherRepo{
         let insertedRecord = super.Create(entity: .Weather) as! Weather
         
         insertedRecord.weatherID = super.GenerateUUID()
-        insertedRecord.weatherDate = date.toString
+        insertedRecord.weatherDate = date.toISODateString()
         
         insertedRecord.location = location
         
@@ -52,13 +52,13 @@ class WeatherRepo : RepositoryBase, IWeatherRepo{
 
     internal func GetWeather(on date: Date, at location: Location?) throws -> Weather? {
         
-        let pred = NSPredicate(format: "weatherDate =%d && location =%@", date.toString,location!)
+        let pred = NSPredicate(format: "weatherDate =%@ && location =%@", date.toISODateString(),location!)
         let sort = [NSSortDescriptor(key: "weatherDate", ascending: false), NSSortDescriptor(key: "modifiedOn", ascending: false)]
         
-        guard let weather = CoreDataManager.shared.fetchData(entity: Entity.Weather.rawValue, predicate: pred, sorting: sort) as? [Weather] else {
+        guard let weather = CoreDataManager.shared.fetchEntityData(entity: Entity.Weather.rawValue, predicate: pred, sorting: sort) as? [Weather] else {
             throw CoreDataError.ReadError
         }
         
-        return weather.first!
+        return weather.count > 0 ? weather.first! : nil
     }
 }

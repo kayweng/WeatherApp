@@ -48,7 +48,7 @@ class RepositoryBase : IRepositoryBase {
     
     internal func Delete(pred: NSPredicate, in entity: Entity) throws -> Bool {
         
-        guard let record = try CoreDataManager.shared.fetchData(context: self.context, entity: entity.rawValue, predicate: pred) else {
+        guard let record = try CoreDataManager.shared.fetchEntityData(from: self.context, entity: entity.rawValue, predicate: pred) else {
             return false    // no found
         }
         

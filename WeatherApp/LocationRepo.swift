@@ -42,7 +42,7 @@ class LocationRepo : RepositoryBase, ILocationRepo {
     
     internal func GetAllLocations() throws -> [Location]? {
 
-        guard let locations:[Location] = try CoreDataManager.shared.fetchData(context: super.context, entity: Entity.Location.rawValue, predicate: nil) as? [Location] else {
+        guard let locations:[Location] = try CoreDataManager.shared.fetchEntityData(from: super.context, entity: Entity.Location.rawValue, predicate: nil) as? [Location] else {
             throw CoreDataError.ReadError
         }
         
@@ -51,10 +51,10 @@ class LocationRepo : RepositoryBase, ILocationRepo {
 
     internal func GetLocation(_ type:LocationType,on date:Date) throws -> Location? {
         
-        let predicate:NSPredicate = NSPredicate(format: "locationType =%@ && locationDate =%@", type.rawValue, date.toString)
+        let predicate:NSPredicate = NSPredicate(format: "locationType =%@ && locationDate =%@", type.rawValue, date.toISODateString())
         let sort = [NSSortDescriptor(key: "modifiedOn", ascending: false)]
         
-        guard let locations:[Location] = try CoreDataManager.shared.fetchData(context: super.context, entity: Entity.Location.rawValue, predicate: predicate,sorting: sort) as! [Location]? else {
+        guard let locations:[Location] = try CoreDataManager.shared.fetchEntityData(from: super.context, entity: Entity.Location.rawValue, predicate: predicate,sorting: sort) as! [Location]? else {
             throw CoreDataError.ReadError
         }
         
@@ -79,7 +79,7 @@ class LocationRepo : RepositoryBase, ILocationRepo {
      
         let predicate:NSPredicate = NSPredicate(format: "locationType == %@", location.type!.rawValue)
         
-        guard let locations:[Location] = try CoreDataManager.shared.fetchData(context: super.context, entity: Entity.Location.rawValue, predicate: predicate) as! [Location]? else {
+        guard let locations:[Location] = try CoreDataManager.shared.fetchEntityData(from: super.context, entity: Entity.Location.rawValue, predicate: predicate) as! [Location]? else {
             throw CoreDataError.ReadError
         }
         
@@ -101,7 +101,7 @@ class LocationRepo : RepositoryBase, ILocationRepo {
         insertedRecord.locationCountry = location.country
         insertedRecord.locationName = location.name
         insertedRecord.locationType = location.type?.rawValue
-        insertedRecord.locationDate = Date().today.toString
+        insertedRecord.locationDate = Date().today.toISODateString()
         insertedRecord.createdOn = Date().now as NSDate
         insertedRecord.modifiedOn = Date().now as NSDate
         
@@ -112,7 +112,7 @@ class LocationRepo : RepositoryBase, ILocationRepo {
         
         let predicate:NSPredicate = NSPredicate(format: "locationType == %@", location.type!.rawValue)
         
-        guard let records:[Location] = try CoreDataManager.shared.fetchData(context: super.context, entity: Entity.Location.rawValue, predicate: predicate) as! [Location]? else {
+        guard let records:[Location] = try CoreDataManager.shared.fetchEntityData(from: super.context, entity: Entity.Location.rawValue, predicate: predicate) as! [Location]? else {
             throw CoreDataError.ReadError
         }
         
@@ -123,7 +123,7 @@ class LocationRepo : RepositoryBase, ILocationRepo {
             updatedRecord.locationCity = location.city
             updatedRecord.locationCountry = location.country
             updatedRecord.locationName = location.name
-            updatedRecord.locationDate = Date().today.toString
+            updatedRecord.locationDate = Date().today.toISODateString()
             updatedRecord.modifiedOn = Date().now as NSDate
             
             return try super.Save() ? updatedRecord : nil

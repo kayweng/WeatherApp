@@ -49,10 +49,10 @@ class WeatherDetailRepo : RepositoryBase, IWeatherDetailRepo{
     
     internal func GetWeatherDetail(on date: Date, header: Weather) -> [WeatherDetail]? {
         
-        let predicate = NSPredicate(format: "weather == %@", header)
-        let sorts = [NSSortDescriptor(key: "", ascending: true)]
+        let predicate = NSPredicate(format: "weather =%@", header)
+        let sorts = [NSSortDescriptor(key: "createdOn", ascending: false)]
         
-        guard let details = CoreDataManager.shared.fetchData(entity: Entity.WeatherDetail.rawValue, predicate: predicate, sorting: sorts) else {
+        guard let details = CoreDataManager.shared.fetchEntityData(entity: Entity.WeatherDetail.rawValue, predicate: predicate, sorting: sorts) else {
             return nil
         }
         
