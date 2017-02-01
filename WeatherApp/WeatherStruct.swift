@@ -42,8 +42,19 @@ public struct Container<T>{
     var itemDidLoad: ((_ item: [T]) -> Void)?
 }
 
-public class IWeatherResult : NSObject {
+public class IWeatherResult : NSObject, NSCoding {
     
+    override init() {
+        super.init()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        
+    }
+
+    public func encode(with aCoder: NSCoder) {
+        
+    }
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/astronomy/q/Australia/Sydney.json
@@ -55,8 +66,9 @@ public class AstronomyResult : IWeatherResult{
     var moonrise:Time?
     var moonset:Time?
     
-    init(json:JSONDictionary) {
-
+    init(_ json:JSONDictionary) {
+        super.init()
+        
         if let sun:JSONDictionary = json["sun_phase"] as? JSONDictionary{
             
             let sr = sun["sunrise"] as! JSONDictionary
@@ -79,6 +91,80 @@ public class AstronomyResult : IWeatherResult{
             moonset = ("\(me["hour"]!)","\(me["minute"]!)","")
         }
     }
+    
+    init(result:AstronomyResult){
+        super.init()
+
+        self.moonPhase = result.moonPhase
+        self.moonrise = result.moonrise
+        self.moonset = result.moonset
+        
+        self.sunrise = result.sunrise
+        self.sunset = result.sunset
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        //Sunrise
+        self.sunrise!.hour = aDecoder.decodeObject(forKey: "sunrise.hour")! as! String
+        self.sunrise!.minutes = aDecoder.decodeObject(forKey: "sunrise.minutes")! as! String
+        self.sunrise!.seconds = aDecoder.decodeObject(forKey: "sunrise.seconds")! as! String
+        
+        //Sunset
+        self.sunset!.hour = aDecoder.decodeObject(forKey: "sunset.hour")! as! String
+        self.sunset!.minutes = aDecoder.decodeObject(forKey: "sunset.minutes")! as! String
+        self.sunset!.seconds = aDecoder.decodeObject(forKey: "sunset.seconds")! as! String
+    
+        //MoonPhase
+        self.moonPhase!.ageOfMoon = aDecoder.decodeObject(forKey: "moonPhase.ageOfMoon")! as! String
+        self.moonPhase!.percentIlluminated = aDecoder.decodeObject(forKey: "moonPhase.percentIlluminated")! as! String
+        self.moonPhase!.current_time.hour = aDecoder.decodeObject(forKey: "moonPhase.current_time.hour")! as! String
+        self.moonPhase!.current_time.minutes = aDecoder.decodeObject(forKey: "moonPhase.current_time.minutes")! as! String
+        self.moonPhase!.current_time.seconds = aDecoder.decodeObject(forKey: "moonPhase.current_time.seconds")! as! String
+        
+        //Moonrise
+        self.moonrise!.hour = aDecoder.decodeObject(forKey: "moonrise.hour")! as! String
+        self.moonrise!.minutes = aDecoder.decodeObject(forKey: "moonrise.minutes")! as! String
+        self.moonrise!.seconds = aDecoder.decodeObject(forKey: "moonrise.seconds")! as! String
+     
+        //Moonset
+        self.moonset!.hour = aDecoder.decodeObject(forKey: "moonset.hour")! as! String
+        self.moonset!.minutes = aDecoder.decodeObject(forKey: "moonset.minutes")! as! String
+        self.moonset!.seconds = aDecoder.decodeObject(forKey: "moonset.seconds")! as! String
+    }
+    
+    public override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        
+        //Sunrise
+        aCoder.encode(self.sunrise?.hour,forKey: "sunrise.hour")
+        aCoder.encode(self.sunrise?.minutes,forKey: "sunrise.minutes")
+        aCoder.encode(self.sunrise?.seconds,forKey: "sunrise.seconds")
+        
+        //Sunset
+        aCoder.encode(self.sunset?.hour,forKey: "sunset.hour")
+        aCoder.encode(self.sunset?.minutes,forKey: "sunset.minutes")
+        aCoder.encode(self.sunset?.seconds,forKey: "sunset.seconds")
+        
+        //MoonPhase
+        aCoder.encode(self.moonPhase?.ageOfMoon,forKey: "moonPhase.ageOfMoon")
+        aCoder.encode(self.moonPhase?.percentIlluminated,forKey: "moonPhase.percentIlluminated")
+        aCoder.encode(self.moonPhase?.current_time.hour,forKey: "moonPhase.current_time.hour")
+        aCoder.encode(self.moonPhase?.current_time.minutes,forKey: "moonPhase.current_time.minutes")
+        aCoder.encode(self.moonPhase?.current_time.seconds,forKey: "moonPhase.current_time.seconds")
+        
+        //Moonrise
+        aCoder.encode(self.moonrise?.hour,forKey: "moonrise.hour")
+        aCoder.encode(self.moonrise?.minutes,forKey: "moonrise.minutes")
+        aCoder.encode(self.moonrise?.seconds,forKey: "moonrise.seconds")
+        
+        //Moonset
+        aCoder.encode(self.moonset?.hour,forKey: "moonsethour")
+        aCoder.encode(self.moonset?.minutes,forKey: "moonset.minutes")
+        aCoder.encode(self.moonset?.seconds,forKey: "moonset.seconds")
+    }
+    
 }
 
 //Returns the current temperature, weather condition, humidity, wind, 'feels like' temperature, barometric pressure, and visibility.
@@ -94,8 +180,9 @@ public class ConditionsResult: IWeatherResult{
     var icon:String?
     var uv:String?
     
-    init(json:JSONDictionary) {
-     
+    init(_ json:JSONDictionary) {
+        super.init()
+        
         if let co = json["current_observation"] as? JSONDictionary{
             
             if let dp = co["display_location"] as? JSONDictionary{
@@ -121,6 +208,104 @@ public class ConditionsResult: IWeatherResult{
         }
         
     }
+    
+    init(result:ConditionsResult){
+        super.init()
+        
+        self.displayLocation = result.displayLocation
+        self.observationLocation = result.observationLocation
+        self.uv = result.uv
+        self.weather = result.weather
+        self.icon = result.icon
+        self.feel = result.feel
+        self.wind = result.wind
+        self.visibility = result.visibility
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        
+        //DisplayLocation
+        self.displayLocation!.city = aDecoder.decodeObject(forKey: "displayLocation.city")! as! String
+        self.displayLocation!.country = aDecoder.decodeObject(forKey: "displayLocation.country")! as! String
+        self.displayLocation!.full = aDecoder.decodeObject(forKey: "displayLocation.full")! as! String
+        self.displayLocation!.location.elevation = aDecoder.decodeObject(forKey: "displayLocation.location.elevation")! as! String
+        self.displayLocation!.location.latitude = aDecoder.decodeObject(forKey: "displayLocation.location.latitude")! as! String
+        self.displayLocation!.location.longitude = aDecoder.decodeObject(forKey: "displayLocation.location.longitude")! as! String
+        
+        //ObservationLocation
+        self.observationLocation!.city = aDecoder.decodeObject(forKey: "observationLocation.city")! as! String
+        self.observationLocation!.country = aDecoder.decodeObject(forKey: "observationLocation.country")! as! String
+        self.observationLocation!.full = aDecoder.decodeObject(forKey: "observationLocation.full")! as! String
+        self.observationLocation!.location.elevation = aDecoder.decodeObject(forKey: "observationLocation.location.elevation")! as! String
+        self.observationLocation!.location.latitude = aDecoder.decodeObject(forKey: "observationLocation.location.latitude")! as! String
+        self.observationLocation!.location.longitude = aDecoder.decodeObject(forKey: "observationLocation.location.longitude")! as! String
+        
+        //UV
+        self.uv = aDecoder.decodeObject(forKey: "uv")! as? String
+        
+        //Weather
+        self.weather!.temp.celcius = aDecoder.decodeObject(forKey: "weather.temp.celcius") as! String
+        self.weather!.temp.fahrenheit = aDecoder.decodeObject(forKey: "weather.temp.fahrenheit") as! String
+        self.weather!.temp.fullString = aDecoder.decodeObject(forKey: "weather.temp.fullString") as! String
+        
+        //Icon
+        self.icon! = aDecoder.decodeObject(forKey: "icon") as! String
+        
+        //Feel
+        self.feel!.celcius = aDecoder.decodeObject(forKey: "feel.celcius") as! String
+        self.feel!.fahrenheit = aDecoder.decodeObject(forKey: "feel.fahrenheit") as! String
+        self.feel!.fullString = aDecoder.decodeObject(forKey: "feel.fullString") as! String
+        
+        //Wind
+        self.wind!.mph = aDecoder.decodeObject(forKey: "wind.mph") as! String
+        self.wind!.kph = aDecoder.decodeObject(forKey: "wind.kph") as! String
+        self.wind!.dir = aDecoder.decodeObject(forKey: "wind.dir") as! String
+        self.wind!.degrees = aDecoder.decodeObject(forKey: "wind.degrees") as! Double
+
+    }
+    
+    public override func encode(with aCoder: NSCoder) {
+        
+        //DisplayLocation
+        aCoder.encode(self.displayLocation?.city, forKey:"displayLocation.city")
+        aCoder.encode(self.displayLocation?.country, forKey:"displayLocation.country")
+        aCoder.encode(self.displayLocation?.full, forKey:"displayLocation.full")
+        aCoder.encode(self.displayLocation?.location.elevation, forKey:"displayLocation.location.elevation")
+        aCoder.encode(self.displayLocation?.location.latitude, forKey:"displayLocation.location.latitude")
+        aCoder.encode(self.displayLocation?.location.longitude, forKey:"displayLocation.location.longitude")
+
+        //ObservationLocation
+        aCoder.encode(self.observationLocation?.city, forKey:"observationLocation.city")
+        aCoder.encode(self.observationLocation?.country, forKey:"observationLocation.country")
+        aCoder.encode(self.observationLocation?.full, forKey:"observationLocation.full")
+        aCoder.encode(self.observationLocation?.location.elevation, forKey:"observationLocation.location.elevation")
+        aCoder.encode(self.observationLocation?.location.latitude, forKey:"observationLocation.location.latitude")
+        aCoder.encode(self.observationLocation?.location.longitude, forKey:"observationLocation.location.longitude")
+        
+        //UV
+        aCoder.encode(self.uv, forKey:"uv")
+        
+        //Weather
+        aCoder.encode(self.weather?.temp.celcius, forKey:"weather.temp.celcius")
+        aCoder.encode(self.weather?.temp.fahrenheit, forKey:"weather.temp.fahrenheit")
+        aCoder.encode(self.weather?.temp.fullString, forKey:"weather.temp.fullString")
+        aCoder.encode(self.weather?.humidity, forKey:"weather.humidity")
+        aCoder.encode(self.weather?.description, forKey:"weather.description")
+
+        //Icon
+        aCoder.encode(self.icon, forKey:"icon")
+        
+        //Feel
+        aCoder.encode(self.feel?.celcius, forKey:"feel.celcius")
+        aCoder.encode(self.feel?.fahrenheit, forKey:"feel.fahrenheit")
+        aCoder.encode(self.feel?.fullString, forKey:"feel.fullString")
+        
+        //Wind
+        aCoder.encode(self.wind?.mph, forKey:"wind.mph")
+        aCoder.encode(self.wind?.kph, forKey:"wind.kph")
+        aCoder.encode(self.wind?.dir, forKey:"wind.dir")
+        aCoder.encode(self.wind?.degrees, forKey:"wind.degrees")
+    }
 }
 
 //Returns a summary of the weather for the next 3 days. 
@@ -131,8 +316,9 @@ public class ForecastResult: IWeatherResult{
     var forecastText:[TextForecast] = []
     var simplyForecast:[SimpleForecast] = []
     
-    init(json:JSONDictionary) {
-     
+    init(_ json:JSONDictionary) {
+        super.init()
+        
         if let fo = json["forecast"] as? JSONDictionary{
             
             if let tf = fo["txt_forecast"] as? JSONDictionary{
@@ -180,6 +366,11 @@ public class ForecastResult: IWeatherResult{
                 }
             }
         }
+
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -188,7 +379,8 @@ public class HistoryResult: IWeatherResult{
     
     var history:[(date:WDate, temp:Temperature, cond:Conditions)] = []
     
-    init(json:JSONDictionary) {
+    init(_ json:JSONDictionary) {
+        super.init()
         
         if let hs = json["history"] as? JSONDictionary{
          
@@ -210,6 +402,11 @@ public class HistoryResult: IWeatherResult{
                 }
             }
         }
+
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -219,7 +416,8 @@ public class HourlyResult : IWeatherResult{
     
     var hours:[(wDate:WDate, description:DateDescription, high:Temperature, low:Temperature, cond:String, humidity:String, feelLike:Temperature, uvindex:String, wind:Wind)] = []
     
-    init(json:JSONDictionary) {
+     init(_ json:JSONDictionary) {
+        super.init()
         
         if let hr = json["hourly_forecast"] as? JSONArray{
             
@@ -247,6 +445,10 @@ public class HourlyResult : IWeatherResult{
         }
     
     }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/planner_07010731/q/CA/San_Francisco.json
@@ -260,7 +462,8 @@ public class PlannerResult : IWeatherResult{
     var condition:String?
     var chanceOfs:[(name:String,description:String, percentage:String)] = []
     
-    init(json:JSONDictionary) {
+    init(_ json:JSONDictionary) {
+        super.init()
         
         if let trip = json["trip"] as? JSONDictionary{
             
@@ -351,6 +554,10 @@ public class PlannerResult : IWeatherResult{
         }
         
     }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 //http://api.wunderground.com/api/826830b16b7d2179/tide/q/CA/San_Francisco.json
@@ -359,11 +566,12 @@ public class TideResult: IWeatherResult{
     var tideInfo:(site:String, coord:Coordination, units:String)?
     var tideSummary:[(date:WDate, type:String, height:String)]?
     
-    init(json:JSONDictionary) {
-        
-        
-        
-        
+    init(_ json:JSONDictionary) {
+       super.init()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }
@@ -374,8 +582,9 @@ public class YesterdayResult: IWeatherResult
     var date:WDate?
     var observations:[(date:WDate,temp:Temperature, cond:Conditions)] = []
     
-    init(json:JSONDictionary) {
-     
+    init(_ json:JSONDictionary) {
+        super.init()
+        
         if let his = json["history"] as? JSONDictionary{
          
             if let dt = his["date"] as? JSONDictionary{
@@ -401,6 +610,11 @@ public class YesterdayResult: IWeatherResult
                 }
             }
         }
+
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

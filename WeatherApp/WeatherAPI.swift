@@ -57,7 +57,7 @@ class WeatherAPI {
             var result:Container<AstronomyResult> = Container<AstronomyResult>()
             
             if let _ = json {
-                let astronomy = AstronomyResult(json: json! as JSONDictionary)
+                let astronomy = AstronomyResult(json! as JSONDictionary)
                 result = Container<AstronomyResult>(object: astronomy)
             }
             
@@ -74,7 +74,7 @@ class WeatherAPI {
             var result:Container<ConditionsResult> = Container<ConditionsResult>()
             
             if let _ = json{
-                let conditions = ConditionsResult(json: json! as JSONDictionary)
+                let conditions = ConditionsResult(json! as JSONDictionary)
                 result = Container<ConditionsResult>(object: conditions)
             }
             
@@ -91,7 +91,7 @@ class WeatherAPI {
             var result:Container<ForecastResult> = Container<ForecastResult>()
             
             if let _ = json{
-                let forecast = ForecastResult(json: json! as JSONDictionary)
+                let forecast = ForecastResult(json! as JSONDictionary)
                 result = Container<ForecastResult>(object: forecast)
             }
             
@@ -108,7 +108,7 @@ class WeatherAPI {
             var result:Container<ForecastResult> = Container<ForecastResult>()
             
             if let _ = json{
-                let forecast = ForecastResult(json: json! as JSONDictionary)
+                let forecast = ForecastResult(json! as JSONDictionary)
                 result = Container<ForecastResult>(object: forecast)
             }
             
@@ -126,7 +126,7 @@ class WeatherAPI {
             var result:Container<HistoryResult> = Container<HistoryResult>()
             
             if let _ = json{
-                let history = HistoryResult(json: json! as JSONDictionary)
+                let history = HistoryResult(json! as JSONDictionary)
                 result = Container<HistoryResult>(object: history)
             }
             
@@ -143,7 +143,7 @@ class WeatherAPI {
             var result:Container<HourlyResult> = Container<HourlyResult>()
             
             if let _ = json{
-                let history = HourlyResult(json: json! as JSONDictionary)
+                let history = HourlyResult(json! as JSONDictionary)
                 result = Container<HourlyResult>(object: history)
             }
             
@@ -160,7 +160,7 @@ class WeatherAPI {
             var result:Container<HourlyResult> = Container<HourlyResult>()
             
             if let _ = json{
-                let history = HourlyResult(json: json! as JSONDictionary)
+                let history = HourlyResult(json! as JSONDictionary)
                 result = Container<HourlyResult>(object: history)
             }
             
@@ -177,7 +177,7 @@ class WeatherAPI {
             var result:Container<PlannerResult> = Container<PlannerResult>()
             
             if let _ = json{
-                let history = PlannerResult(json: json! as JSONDictionary)
+                let history = PlannerResult(json! as JSONDictionary)
                 result = Container<PlannerResult>(object: history)
             }
             
@@ -194,7 +194,7 @@ class WeatherAPI {
             var result:Container<YesterdayResult> = Container<YesterdayResult>()
             
             if let _ = json{
-                let yesterday = YesterdayResult(json: json! as JSONDictionary)
+                let yesterday = YesterdayResult(json! as JSONDictionary)
                 result = Container<YesterdayResult>(object: yesterday)
             }
             

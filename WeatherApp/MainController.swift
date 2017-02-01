@@ -199,8 +199,7 @@ class MainController: UIViewController {
             if isNewLocation || isNewWeather {
                 createNewWeather()
             }else{
-                //loadLastWeather()
-                createNewWeather()
+                loadLastWeather()
             }
         }
     }
@@ -252,8 +251,6 @@ class MainController: UIViewController {
                 
                 let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather)
                 newWeather.addToDetail(detail)
-                
-                print("condition population completed !")
             }
         }
         
@@ -264,10 +261,8 @@ class MainController: UIViewController {
                 self.astronomy = result.item[0]
                 self.populateAstronomyResult()
                 
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Condition, header: newWeather)
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Astronomy, header: newWeather)
                 newWeather.addToDetail(detail)
-                
-                print("astronomy population completed !")
             }
         }
         
@@ -278,10 +273,8 @@ class MainController: UIViewController {
                 self.forecast = result.item[0]
                 self.populateForecastResult()
                 
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Condition, header: newWeather)
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Forecast, header: newWeather)
                 newWeather.addToDetail(detail)
-                
-                print("forecast population completed !")
             }
         }
         
@@ -292,10 +285,8 @@ class MainController: UIViewController {
                 self.hourly = result.item[0]
                 self.populateHourlyResult()
                 
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Condition, header: newWeather)
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Hourly, header: newWeather)
                 newWeather.addToDetail(detail)
-                
-                print("hourly population completed !")
             }
         }
         
@@ -306,7 +297,7 @@ class MainController: UIViewController {
                 self.daily = result.item[0]
                 self.populateForecast10DaysResult()
                 
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Condition, header: newWeather)
+                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather)
                 newWeather.addToDetail(detail)
                 
                 print("forecast 10 days population completed !")
