@@ -92,7 +92,7 @@ class ConditionPageController: UITableViewController {
             }
             
             if let f = cond.feel{
-                self.lblFeelsLikeValue.text = "\(f.celcius) \(dsymbol)"
+                self.lblFeelsLikeValue.text = "\(f.celsius) \(dsymbol)"
             }
             
             if let w = cond.wind{

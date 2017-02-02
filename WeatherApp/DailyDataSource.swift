@@ -51,7 +51,7 @@ UICollectionViewDelegate, UICollectionViewDataSource{
         cell.lblDay.text = daDetail!.month.weekday
         
         if gTemperatureUnit == .Celsius{
-            cell.lblTemperature.text = "\(daDetail!.low.celcius)\(dsymbol) / \(daDetail!.high.celcius)\(dsymbol)"
+            cell.lblTemperature.text = "\(daDetail!.low.celsius)\(dsymbol) / \(daDetail!.high.celsius)\(dsymbol)"
         }else{
             cell.lblTemperature.text = "\(daDetail!.low.fahrenheit)\(dsymbol) / \(daDetail!.high.fahrenheit)\(dsymbol)"
         }

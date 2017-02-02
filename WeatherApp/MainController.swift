@@ -300,8 +300,6 @@ class MainController: UIViewController {
                 let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather)
                 newWeather.addToDetail(detail)
                 
-                print("forecast 10 days population completed !")
-                
                 DispatchQueue.main.async {
                     print("Saving")
                     _ = try! RepositoryBase.shared.Save()
@@ -325,7 +323,7 @@ class MainController: UIViewController {
             if let w = cond.weather {
                 
                 self.lblTemperature.text = gTemperatureUnit == SnackKit.TemperatureUnit.Celsius ?
-                    "\(w.temp.celcius.localize(format: "%.0f"))\(dsymbol)" :
+                    "\(w.temp.celsius.localize(format: "%.0f"))\(dsymbol)" :
                     "\(w.temp.fahrenheit.localize(format: "%.0f"))\(dsymbol)"
                 
                 self.weatherDesc = "\(w.description)"
@@ -338,7 +336,7 @@ class MainController: UIViewController {
             if let f = cond.feel {
                 //self.weatherInfo.append("Feels Like \(f.celcius.localize(format: "%.0f"))".degreeFormat)
                 if gTemperatureUnit == SnackKit.TemperatureUnit.Celsius {
-                    self.weatherInfo.append(("temperature_25"," Feels Like \(f.celcius.localize(format: "%.0f"))".degreeFormat))
+                    self.weatherInfo.append(("temperature_25"," Feels Like \(f.celsius.localize(format: "%.0f"))".degreeFormat))
                 }else{
                     self.weatherInfo.append(("temperature_25"," Feels Like \(f.fahrenheit.localize(format: "%.0f"))".degreeFormat))
                 }
@@ -408,8 +406,8 @@ class MainController: UIViewController {
             let sf = fc.simplyForecast
             let todayFC = sf[0] 
             
-            let highTemp = gTemperatureUnit == .Celsius ? todayFC.high.celcius.degreeFormat : todayFC.high.fahrenheit.degreeFormat
-            let lowTemp = gTemperatureUnit == .Celsius ? todayFC.low.celcius.degreeFormat : todayFC.low.fahrenheit.degreeFormat
+            let highTemp = gTemperatureUnit == .Celsius ? todayFC.high.celsius.degreeFormat : todayFC.high.fahrenheit.degreeFormat
+            let lowTemp = gTemperatureUnit == .Celsius ? todayFC.low.celsius.degreeFormat : todayFC.low.fahrenheit.degreeFormat
             
             self.weatherInfo.append(("temperature_25","     \(lowTemp) / \(highTemp)"))
             self.lblMaxMinTemperature.text = "\(lowTemp) / \(highTemp)"

@@ -72,7 +72,7 @@ class HourlyDataSource: NSObject, UICollectionViewProtocol, UICollectionViewDele
         
         //Temperature
         if gTemperatureUnit == TemperatureUnit.Celsius{
-            cell.lblHourTemp.text = "\(hrDetail.low.celcius)\(dsymbol)/\(hrDetail.high.celcius)\(dsymbol)"
+            cell.lblHourTemp.text = "\(hrDetail.low.celsius)\(dsymbol)/\(hrDetail.high.celsius)\(dsymbol)"
         }else{
             cell.lblHourTemp.text = "\(hrDetail.low.fahrenheit)\(dsymbol)/\(hrDetail.high.fahrenheit)\(dsymbol)"
         }

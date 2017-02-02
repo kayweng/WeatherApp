@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Application like to use your location service</string>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>OpenSans-Regular.ttf</string>
