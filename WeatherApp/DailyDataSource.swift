@@ -15,7 +15,7 @@ UICollectionViewDelegate, UICollectionViewDataSource{
 
     @IBOutlet private weak var collectionView:UICollectionView!
     
-    var records:ForecastResult?
+    var records:Forecast10Result?
     
     var delegate: UICollectionView?{
         didSet{

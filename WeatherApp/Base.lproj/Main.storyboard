@@ -127,11 +127,11 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="KKZ-6I-Qxz"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="14"/>
+                                        <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="12"/>
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Unknown" translatesAutoresizingMaskIntoConstraints="NO" id="enZ-df-7sz" userLabel="imgCondition">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="enZ-df-7sz" userLabel="imgCondition">
                                         <rect key="frame" x="113" y="188.5" width="20" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="8k4-9E-qUZ"/>
@@ -204,7 +204,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Mqe-m3-0qz">
-                        <barButtonItem key="leftBarButtonItem" image="Settings 3" id="pga-UK-crw"/>
+                        <barButtonItem key="leftBarButtonItem" image="Settings" id="pga-UK-crw"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Hpr-Ms-rXE"/>
                     </navigationItem>
                     <connections>
@@ -242,7 +242,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8cl-t0-HaG" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yZN-tr-Gnj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="yZN-tr-Gnj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -280,7 +280,7 @@
         <scene sceneID="PTv-pN-bnl">
             <objects>
                 <tableViewController storyboardIdentifier="ConditionPage" useStoryboardIdentifierAsRestorationIdentifier="YES" id="l1X-Lp-6vY" userLabel="Condition Controller" customClass="ConditionPageController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="YGj-Yl-hgR" userLabel="Condition">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="YGj-Yl-hgR" userLabel="Condition">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
@@ -310,7 +310,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="40" id="dRe-ej-cuj" userLabel="FeelsLike">
@@ -336,7 +336,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="40" id="OM3-ey-n8H" userLabel="Wind">
@@ -362,7 +362,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="40" id="sUD-Bh-Gs0" userLabel="Visibility">
@@ -388,7 +388,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="40" id="Hq5-G9-QbS" userLabel="UV">
@@ -414,7 +414,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="50" id="5xY-4n-lbq" userLabel="SunPhase">
@@ -462,23 +462,16 @@
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="74" id="bQJ-Bn-ygU" userLabel="Description">
-                                        <rect key="frame" x="0.0" y="250" width="375" height="74"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="79" id="bQJ-Bn-ygU" userLabel="Description">
+                                        <rect key="frame" x="0.0" y="250" width="375" height="79"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bQJ-Bn-ygU" id="dxQ-Pr-vBC">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="73"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="78"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b60-jS-wnw">
-                                                    <rect key="frame" x="8" y="0.0" width="359" height="73"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                </textView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wpb-Ge-UzI" userLabel="hr">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                                     <color key="backgroundColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -486,18 +479,48 @@
                                                         <constraint firstAttribute="height" constant="1" id="fSW-m5-qyG"/>
                                                     </constraints>
                                                 </view>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b60-jS-wnw">
+                                                    <rect key="frame" x="8" y="9" width="359" height="64.5"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="b60-jS-wnw" secondAttribute="trailing" constant="8" id="0ds-0r-PcS"/>
+                                                <constraint firstItem="b60-jS-wnw" firstAttribute="leading" secondItem="dxQ-Pr-vBC" secondAttribute="leading" constant="8" id="9MM-7m-Aeh"/>
+                                                <constraint firstItem="b60-jS-wnw" firstAttribute="top" secondItem="Wpb-Ge-UzI" secondAttribute="bottom" constant="8" id="K7J-hT-VhU"/>
                                                 <constraint firstItem="Wpb-Ge-UzI" firstAttribute="leading" secondItem="dxQ-Pr-vBC" secondAttribute="leading" id="O1Y-Cf-IQ3"/>
-                                                <constraint firstAttribute="trailing" secondItem="b60-jS-wnw" secondAttribute="trailing" constant="8" id="QCs-0a-P8k"/>
-                                                <constraint firstAttribute="bottom" secondItem="b60-jS-wnw" secondAttribute="bottom" id="WmE-wB-XBK"/>
-                                                <constraint firstItem="b60-jS-wnw" firstAttribute="top" secondItem="dxQ-Pr-vBC" secondAttribute="top" id="Zmj-Up-LT3"/>
-                                                <constraint firstItem="b60-jS-wnw" firstAttribute="leading" secondItem="dxQ-Pr-vBC" secondAttribute="leading" constant="8" id="iFT-pA-DXb"/>
                                                 <constraint firstItem="Wpb-Ge-UzI" firstAttribute="top" secondItem="dxQ-Pr-vBC" secondAttribute="top" id="o4c-r8-PXh"/>
+                                                <constraint firstAttribute="bottom" secondItem="b60-jS-wnw" secondAttribute="bottom" constant="5" id="pbE-ea-kuy"/>
                                                 <constraint firstAttribute="trailing" secondItem="Wpb-Ge-UzI" secondAttribute="trailing" id="yp0-CT-NV7"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="39" id="ZYC-Vy-do0" userLabel="Info">
+                                        <rect key="frame" x="0.0" y="329" width="375" height="39"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZYC-Vy-do0" id="QnA-S9-05L">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="38"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="* Swipe left or right to view more weather information" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Jn-n2-IQG">
+                                                    <rect key="frame" x="37" y="8" width="329" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pointing-up" translatesAutoresizingMaskIntoConstraints="NO" id="kE9-T4-yFP">
+                                                    <rect key="frame" x="8" y="8" width="21" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.0" green="0.25098040700000002" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                 </cells>
@@ -543,7 +566,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hvg-ff-gcf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="189.59999999999999" y="962.51874062968523"/>
+            <point key="canvasLocation" x="181.59999999999999" y="962.51874062968523"/>
         </scene>
         <!--Weather Info Pages Controller-->
         <scene sceneID="Evs-Tu-NzG">
@@ -719,9 +742,10 @@
     <resources>
         <image name="Double Up_50" width="50" height="50"/>
         <image name="Near Me" width="25" height="25"/>
-        <image name="Settings 3" width="32" height="32"/>
+        <image name="Settings" width="32" height="32"/>
         <image name="Sunrise_25" width="25" height="25"/>
         <image name="Sunset_25" width="25" height="25"/>
         <image name="Unknown" width="50" height="50"/>
+        <image name="pointing-up" width="24" height="24"/>
     </resources>
 </document>

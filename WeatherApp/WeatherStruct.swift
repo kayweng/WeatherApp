@@ -57,14 +57,93 @@ public class IWeatherResult : NSObject, NSCoding {
     }
 }
 
+public class AutoLocationResult : IWeatherResult{
+    
+    var name:String = ""
+    var type:String = ""
+    var country:String = ""
+    var zmw:String = ""
+    var tz:String = ""
+    var tzs:String = ""
+    var queryString:String = ""
+    var coordination:String = ""
+    var latitude:String = ""
+    var longitude:String = ""
+    
+    init(_ json:JSONDictionary){
+        super.init()
+        
+        if let result = json["RESULTS"] as? NSArray{
+        
+            let info = (result as JSONArray).first as! JSONDictionary
+            
+            name = info["name"] as! String
+            type = info["type"] as! String
+            country = info["c"] as! String
+            zmw = info["zmw"] as! String
+            tz = info["tz"] as! String
+            tzs = info["tzs"] as! String
+            queryString = info["l"] as! String
+            coordination = info["ll"] as! String
+            latitude = info["lat"] as! String
+            longitude = info["lon"] as! String
+        }
+    }
+    
+    init(result:AutoLocationResult){
+        super.init()
+        
+        self.name = result.name
+        self.type = result.type
+        self.country = result.country
+        self.zmw = result.zmw
+        self.tz = result.tz
+        self.tzs = result.tzs
+        self.queryString = result.queryString
+        self.coordination = result.coordination
+        self.latitude = result.latitude
+        self.longitude = result.longitude
+    }
+    
+    public override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        
+        aCoder.encode(self.name,forKey: "name")
+        aCoder.encode(self.type,forKey: "type")
+        aCoder.encode(self.country,forKey: "country")
+        aCoder.encode(self.zmw,forKey: "zmw")
+        aCoder.encode(self.tz,forKey: "tz")
+        aCoder.encode(self.tzs,forKey: "tzs")
+        aCoder.encode(self.queryString,forKey: "queryString")
+        aCoder.encode(self.coordination,forKey: "coordination")
+        aCoder.encode(self.latitude,forKey: "latitude")
+        aCoder.encode(self.longitude,forKey: "longitude")
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init()
+    
+        self.name = aDecoder.decodeObject(forKey: "name")! as! String
+        self.type = aDecoder.decodeObject(forKey: "type")! as! String
+        self.country = aDecoder.decodeObject(forKey: "country")! as! String
+        self.zmw = aDecoder.decodeObject(forKey: "zmw")! as! String
+        self.tz = aDecoder.decodeObject(forKey: "tz")! as! String
+        self.tzs = aDecoder.decodeObject(forKey: "tzs")! as! String
+        self.queryString = aDecoder.decodeObject(forKey: "queryString")! as! String
+        self.coordination = aDecoder.decodeObject(forKey: "coordination")! as! String
+        self.latitude = aDecoder.decodeObject(forKey: "latitude")! as! String
+        self.longitude = aDecoder.decodeObject(forKey: "longitude")! as! String
+    }
+}
+
 //http://api.wunderground.com/api/826830b16b7d2179/astronomy/q/Australia/Sydney.json
 public class AstronomyResult : IWeatherResult{
     
-    var moonPhase:(percentIlluminated:String, ageOfMoon:String, current_time:Time)?
-    var sunrise:Time?
-    var sunset:Time?
-    var moonrise:Time?
-    var moonset:Time?
+    var moonPhase:(percentIlluminated:String, ageOfMoon:String, current_time:Time) = ("","",("","",""))
+    var sunrise:Time = ("","","")
+    var sunset:Time = ("","","")
+    var moonrise:Time = ("","","")
+    var moonset:Time = ("","","")
     
     init(_ json:JSONDictionary) {
         super.init()
@@ -107,62 +186,62 @@ public class AstronomyResult : IWeatherResult{
         super.init(coder: aDecoder)
         
         //Sunrise
-        self.sunrise!.hour = aDecoder.decodeObject(forKey: "sunrise.hour")! as! String
-        self.sunrise!.minutes = aDecoder.decodeObject(forKey: "sunrise.minutes")! as! String
-        self.sunrise!.seconds = aDecoder.decodeObject(forKey: "sunrise.seconds")! as! String
+        self.sunrise.hour = aDecoder.decodeObject(forKey: "sunrise.hour")! as! String
+        self.sunrise.minutes = aDecoder.decodeObject(forKey: "sunrise.minutes")! as! String
+        self.sunrise.seconds = aDecoder.decodeObject(forKey: "sunrise.seconds")! as! String
         
         //Sunset
-        self.sunset!.hour = aDecoder.decodeObject(forKey: "sunset.hour")! as! String
-        self.sunset!.minutes = aDecoder.decodeObject(forKey: "sunset.minutes")! as! String
-        self.sunset!.seconds = aDecoder.decodeObject(forKey: "sunset.seconds")! as! String
+        self.sunset.hour = aDecoder.decodeObject(forKey: "sunset.hour")! as! String
+        self.sunset.minutes = aDecoder.decodeObject(forKey: "sunset.minutes")! as! String
+        self.sunset.seconds = aDecoder.decodeObject(forKey: "sunset.seconds")! as! String
     
         //MoonPhase
-        self.moonPhase!.ageOfMoon = aDecoder.decodeObject(forKey: "moonPhase.ageOfMoon")! as! String
-        self.moonPhase!.percentIlluminated = aDecoder.decodeObject(forKey: "moonPhase.percentIlluminated")! as! String
-        self.moonPhase!.current_time.hour = aDecoder.decodeObject(forKey: "moonPhase.current_time.hour")! as! String
-        self.moonPhase!.current_time.minutes = aDecoder.decodeObject(forKey: "moonPhase.current_time.minutes")! as! String
-        self.moonPhase!.current_time.seconds = aDecoder.decodeObject(forKey: "moonPhase.current_time.seconds")! as! String
+        self.moonPhase.ageOfMoon = aDecoder.decodeObject(forKey: "moonPhase.ageOfMoon")! as! String
+        self.moonPhase.percentIlluminated = aDecoder.decodeObject(forKey: "moonPhase.percentIlluminated")! as! String
+        self.moonPhase.current_time.hour = aDecoder.decodeObject(forKey: "moonPhase.current_time.hour")! as! String
+        self.moonPhase.current_time.minutes = aDecoder.decodeObject(forKey: "moonPhase.current_time.minutes")! as! String
+        self.moonPhase.current_time.seconds = aDecoder.decodeObject(forKey: "moonPhase.current_time.seconds")! as! String
         
         //Moonrise
-        self.moonrise!.hour = aDecoder.decodeObject(forKey: "moonrise.hour")! as! String
-        self.moonrise!.minutes = aDecoder.decodeObject(forKey: "moonrise.minutes")! as! String
-        self.moonrise!.seconds = aDecoder.decodeObject(forKey: "moonrise.seconds")! as! String
+        self.moonrise.hour = aDecoder.decodeObject(forKey: "moonrise.hour")! as! String
+        self.moonrise.minutes = aDecoder.decodeObject(forKey: "moonrise.minutes")! as! String
+        self.moonrise.seconds = aDecoder.decodeObject(forKey: "moonrise.seconds")! as! String
      
         //Moonset
-        self.moonset!.hour = aDecoder.decodeObject(forKey: "moonset.hour")! as! String
-        self.moonset!.minutes = aDecoder.decodeObject(forKey: "moonset.minutes")! as! String
-        self.moonset!.seconds = aDecoder.decodeObject(forKey: "moonset.seconds")! as! String
+        self.moonset.hour = aDecoder.decodeObject(forKey: "moonset.hour")! as! String
+        self.moonset.minutes = aDecoder.decodeObject(forKey: "moonset.minutes")! as! String
+        self.moonset.seconds = aDecoder.decodeObject(forKey: "moonset.seconds")! as! String
     }
     
     public override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         
         //Sunrise
-        aCoder.encode(self.sunrise?.hour,forKey: "sunrise.hour")
-        aCoder.encode(self.sunrise?.minutes,forKey: "sunrise.minutes")
-        aCoder.encode(self.sunrise?.seconds,forKey: "sunrise.seconds")
+        aCoder.encode(self.sunrise.hour,forKey: "sunrise.hour")
+        aCoder.encode(self.sunrise.minutes,forKey: "sunrise.minutes")
+        aCoder.encode(self.sunrise.seconds,forKey: "sunrise.seconds")
         
         //Sunset
-        aCoder.encode(self.sunset?.hour,forKey: "sunset.hour")
-        aCoder.encode(self.sunset?.minutes,forKey: "sunset.minutes")
-        aCoder.encode(self.sunset?.seconds,forKey: "sunset.seconds")
+        aCoder.encode(self.sunset.hour,forKey: "sunset.hour")
+        aCoder.encode(self.sunset.minutes,forKey: "sunset.minutes")
+        aCoder.encode(self.sunset.seconds,forKey: "sunset.seconds")
         
         //MoonPhase
-        aCoder.encode(self.moonPhase?.ageOfMoon,forKey: "moonPhase.ageOfMoon")
-        aCoder.encode(self.moonPhase?.percentIlluminated,forKey: "moonPhase.percentIlluminated")
-        aCoder.encode(self.moonPhase?.current_time.hour,forKey: "moonPhase.current_time.hour")
-        aCoder.encode(self.moonPhase?.current_time.minutes,forKey: "moonPhase.current_time.minutes")
-        aCoder.encode(self.moonPhase?.current_time.seconds,forKey: "moonPhase.current_time.seconds")
+        aCoder.encode(self.moonPhase.ageOfMoon,forKey: "moonPhase.ageOfMoon")
+        aCoder.encode(self.moonPhase.percentIlluminated,forKey: "moonPhase.percentIlluminated")
+        aCoder.encode(self.moonPhase.current_time.hour,forKey: "moonPhase.current_time.hour")
+        aCoder.encode(self.moonPhase.current_time.minutes,forKey: "moonPhase.current_time.minutes")
+        aCoder.encode(self.moonPhase.current_time.seconds,forKey: "moonPhase.current_time.seconds")
         
         //Moonrise
-        aCoder.encode(self.moonrise?.hour,forKey: "moonrise.hour")
-        aCoder.encode(self.moonrise?.minutes,forKey: "moonrise.minutes")
-        aCoder.encode(self.moonrise?.seconds,forKey: "moonrise.seconds")
+        aCoder.encode(self.moonrise.hour,forKey: "moonrise.hour")
+        aCoder.encode(self.moonrise.minutes,forKey: "moonrise.minutes")
+        aCoder.encode(self.moonrise.seconds,forKey: "moonrise.seconds")
         
         //Moonset
-        aCoder.encode(self.moonset?.hour,forKey: "moonsethour")
-        aCoder.encode(self.moonset?.minutes,forKey: "moonset.minutes")
-        aCoder.encode(self.moonset?.seconds,forKey: "moonset.seconds")
+        aCoder.encode(self.moonset.hour,forKey: "moonset.hour")
+        aCoder.encode(self.moonset.minutes,forKey: "moonset.minutes")
+        aCoder.encode(self.moonset.seconds,forKey: "moonset.seconds")
     }
     
 }
@@ -171,14 +250,14 @@ public class AstronomyResult : IWeatherResult{
 //http://api.wunderground.com/api/826830b16b7d2179/conditions/q/CA/San_Francisco.json
 public class ConditionsResult: IWeatherResult{
     
-    var displayLocation:(full:String, city:String, country:String, location:Coordination)?
-    var observationLocation:(full:String, city:String, country:String, location:Coordination)?
-    var weather:(temp:Temperature,description:String,humidity:String)?
-    var feel:FeelLike?
-    var wind:Wind?
-    var visibility:Visibility?
-    var icon:String?
-    var uv:String?
+    var displayLocation:(full:String, city:String, country:String, location:Coordination) = ("","","",(("", "", "")))
+    var observationLocation:(full:String, city:String, country:String, location:Coordination) = ("","","",(("", "", "")))
+    var weather:(temp:Temperature,description:String,humidity:String) = (("","",""),"","")
+    var feel:FeelLike = ("","","")
+    var wind:Wind = ("","","",0)
+    var visibility:Visibility = ("","")
+    var icon:String = ""
+    var uv:String = ""
     
     init(_ json:JSONDictionary) {
         super.init()
@@ -199,9 +278,9 @@ public class ConditionsResult: IWeatherResult{
             let temp = ("\(co["temp_c"]!)","\(co["temp_f"]!)","\(co["temperature_string"]!)")
             let hum  = co["relative_humidity"] as? String
             
-            uv = co["UV"] as? String
+            uv = co["UV"] as! String
             weather = (temp,desc!,hum!)
-            icon = co["icon"] as? String
+            icon = co["icon"] as! String
             feel = ("\(co["feelslike_c"]!)","\(co["feelslike_f"]!)","\(co["feelslike_string"]!)")
             wind = ("\(co["wind_mph"]!)", "\(co["wind_kph"]!)", "\(co["wind_dir"]!)", co["wind_degrees"] as! Double)
             visibility = ("\(co["visibility_mi"]!)", "\(co["visibility_km"]!)")
@@ -226,93 +305,95 @@ public class ConditionsResult: IWeatherResult{
         super.init()
         
         //DisplayLocation
-        self.displayLocation?.city = aDecoder.decodeObject(forKey: "displayLocation.city")! as! String
-        self.displayLocation!.country = aDecoder.decodeObject(forKey: "displayLocation.country")! as! String
-        self.displayLocation!.full = aDecoder.decodeObject(forKey: "displayLocation.full")! as! String
-        self.displayLocation!.location.elevation = aDecoder.decodeObject(forKey: "displayLocation.location.elevation")! as! String
-        self.displayLocation!.location.latitude = aDecoder.decodeObject(forKey: "displayLocation.location.latitude")! as! String
-        self.displayLocation!.location.longitude = aDecoder.decodeObject(forKey: "displayLocation.location.longitude")! as! String
+        self.displayLocation.city = aDecoder.decodeObject(forKey: "displayLocation.city")! as! String
+        self.displayLocation.country = aDecoder.decodeObject(forKey: "displayLocation.country")! as! String
+        self.displayLocation.full = aDecoder.decodeObject(forKey: "displayLocation.full")! as! String
+        self.displayLocation.location.elevation = aDecoder.decodeObject(forKey: "displayLocation.location.elevation")! as! String
+        self.displayLocation.location.latitude = aDecoder.decodeObject(forKey: "displayLocation.location.latitude")! as! String
+        self.displayLocation.location.longitude = aDecoder.decodeObject(forKey: "displayLocation.location.longitude")! as! String
         
         //ObservationLocation
-        self.observationLocation!.city = aDecoder.decodeObject(forKey: "observationLocation.city")! as! String
-        self.observationLocation!.country = aDecoder.decodeObject(forKey: "observationLocation.country")! as! String
-        self.observationLocation!.full = aDecoder.decodeObject(forKey: "observationLocation.full")! as! String
-        self.observationLocation!.location.elevation = aDecoder.decodeObject(forKey: "observationLocation.location.elevation")! as! String
-        self.observationLocation!.location.latitude = aDecoder.decodeObject(forKey: "observationLocation.location.latitude")! as! String
-        self.observationLocation!.location.longitude = aDecoder.decodeObject(forKey: "observationLocation.location.longitude")! as! String
+        self.observationLocation.city = aDecoder.decodeObject(forKey: "observationLocation.city")! as! String
+        self.observationLocation.country = aDecoder.decodeObject(forKey: "observationLocation.country")! as! String
+        self.observationLocation.full = aDecoder.decodeObject(forKey: "observationLocation.full")! as! String
+        self.observationLocation.location.elevation = aDecoder.decodeObject(forKey: "observationLocation.location.elevation")! as! String
+        self.observationLocation.location.latitude = aDecoder.decodeObject(forKey: "observationLocation.location.latitude")! as! String
+        self.observationLocation.location.longitude = aDecoder.decodeObject(forKey: "observationLocation.location.longitude")! as! String
         
         //UV
-        self.uv = aDecoder.decodeObject(forKey: "uv")! as? String
+        self.uv = aDecoder.decodeObject(forKey: "uv") as! String
         
         //Weather
-        self.weather!.temp.celsius = aDecoder.decodeObject(forKey: "weather.temp.celsius") as! String
-        self.weather!.temp.fahrenheit = aDecoder.decodeObject(forKey: "weather.temp.fahrenheit") as! String
-        self.weather!.temp.fullString = aDecoder.decodeObject(forKey: "weather.temp.fullString") as! String
-        
+        self.weather.temp.celsius = aDecoder.decodeObject(forKey: "weather.temp.celsius") as! String
+        self.weather.temp.fahrenheit = aDecoder.decodeObject(forKey: "weather.temp.fahrenheit") as! String
+        self.weather.temp.fullString = aDecoder.decodeObject(forKey: "weather.temp.fullString") as! String
+        self.weather.humidity = aDecoder.decodeObject(forKey: "weather.humidity") as! String
+        self.weather.description = aDecoder.decodeObject(forKey: "weather.description") as! String
+       
         //Icon
-        self.icon! = aDecoder.decodeObject(forKey: "icon") as! String
+        self.icon = aDecoder.decodeObject(forKey: "icon") as! String
         
         //Feel
-        self.feel!.celsius = aDecoder.decodeObject(forKey: "feel.celsius") as! String
-        self.feel!.fahrenheit = aDecoder.decodeObject(forKey: "feel.fahrenheit") as! String
-        self.feel!.fullString = aDecoder.decodeObject(forKey: "feel.fullString") as! String
+        self.feel.celsius = aDecoder.decodeObject(forKey: "feel.celsius") as! String
+        self.feel.fahrenheit = aDecoder.decodeObject(forKey: "feel.fahrenheit") as! String
+        self.feel.fullString = aDecoder.decodeObject(forKey: "feel.fullString") as! String
         
         //Wind
-        self.wind!.mph = aDecoder.decodeObject(forKey: "wind.mph") as! String
-        self.wind!.kph = aDecoder.decodeObject(forKey: "wind.kph") as! String
-        self.wind!.dir = aDecoder.decodeObject(forKey: "wind.dir") as! String
-        self.wind!.degrees = aDecoder.decodeDouble(forKey: "wind.degrees") as! Double
+        self.wind.mph = aDecoder.decodeObject(forKey: "wind.mph") as! String
+        self.wind.kph = aDecoder.decodeObject(forKey: "wind.kph") as! String
+        self.wind.dir = aDecoder.decodeObject(forKey: "wind.dir") as! String
+        self.wind.degrees = aDecoder.decodeDouble(forKey: "wind.degrees") 
 
         //Visibility
-        self.visibility!.mi = aDecoder.decodeObject(forKey: "visibility.mi") as! String
-        self.visibility!.km = aDecoder.decodeObject(forKey: "visibility.km") as! String
+        self.visibility.mi = aDecoder.decodeObject(forKey: "visibility.mi") as! String
+        self.visibility.km = aDecoder.decodeObject(forKey: "visibility.km") as! String
     }
     
     public override func encode(with aCoder: NSCoder) {
         
         //DisplayLocation
-        aCoder.encode(self.displayLocation?.city, forKey:"displayLocation.city")
-        aCoder.encode(self.displayLocation?.country, forKey:"displayLocation.country")
-        aCoder.encode(self.displayLocation?.full, forKey:"displayLocation.full")
-        aCoder.encode(self.displayLocation?.location.elevation, forKey:"displayLocation.location.elevation")
-        aCoder.encode(self.displayLocation?.location.latitude, forKey:"displayLocation.location.latitude")
-        aCoder.encode(self.displayLocation?.location.longitude, forKey:"displayLocation.location.longitude")
+        aCoder.encode(self.displayLocation.city, forKey:"displayLocation.city")
+        aCoder.encode(self.displayLocation.country, forKey:"displayLocation.country")
+        aCoder.encode(self.displayLocation.full, forKey:"displayLocation.full")
+        aCoder.encode(self.displayLocation.location.elevation, forKey:"displayLocation.location.elevation")
+        aCoder.encode(self.displayLocation.location.latitude, forKey:"displayLocation.location.latitude")
+        aCoder.encode(self.displayLocation.location.longitude, forKey:"displayLocation.location.longitude")
 
         //ObservationLocation
-        aCoder.encode(self.observationLocation?.city, forKey:"observationLocation.city")
-        aCoder.encode(self.observationLocation?.country, forKey:"observationLocation.country")
-        aCoder.encode(self.observationLocation?.full, forKey:"observationLocation.full")
-        aCoder.encode(self.observationLocation?.location.elevation, forKey:"observationLocation.location.elevation")
-        aCoder.encode(self.observationLocation?.location.latitude, forKey:"observationLocation.location.latitude")
-        aCoder.encode(self.observationLocation?.location.longitude, forKey:"observationLocation.location.longitude")
+        aCoder.encode(self.observationLocation.city, forKey:"observationLocation.city")
+        aCoder.encode(self.observationLocation.country, forKey:"observationLocation.country")
+        aCoder.encode(self.observationLocation.full, forKey:"observationLocation.full")
+        aCoder.encode(self.observationLocation.location.elevation, forKey:"observationLocation.location.elevation")
+        aCoder.encode(self.observationLocation.location.latitude, forKey:"observationLocation.location.latitude")
+        aCoder.encode(self.observationLocation.location.longitude, forKey:"observationLocation.location.longitude")
         
         //UV
         aCoder.encode(self.uv, forKey:"uv")
         
         //Weather
-        aCoder.encode(self.weather?.temp.celsius, forKey:"weather.temp.celsius")
-        aCoder.encode(self.weather?.temp.fahrenheit, forKey:"weather.temp.fahrenheit")
-        aCoder.encode(self.weather?.temp.fullString, forKey:"weather.temp.fullString")
-        aCoder.encode(self.weather?.humidity, forKey:"weather.humidity")
-        aCoder.encode(self.weather?.description, forKey:"weather.description")
+        aCoder.encode(self.weather.temp.celsius, forKey:"weather.temp.celsius")
+        aCoder.encode(self.weather.temp.fahrenheit, forKey:"weather.temp.fahrenheit")
+        aCoder.encode(self.weather.temp.fullString, forKey:"weather.temp.fullString")
+        aCoder.encode(self.weather.humidity, forKey:"weather.humidity")
+        aCoder.encode(self.weather.description, forKey:"weather.description")
 
         //Icon
         aCoder.encode(self.icon, forKey:"icon")
         
         //Feel
-        aCoder.encode(self.feel?.celsius, forKey:"feel.celsius")
-        aCoder.encode(self.feel?.fahrenheit, forKey:"feel.fahrenheit")
-        aCoder.encode(self.feel?.fullString, forKey:"feel.fullString")
+        aCoder.encode(self.feel.celsius, forKey:"feel.celsius")
+        aCoder.encode(self.feel.fahrenheit, forKey:"feel.fahrenheit")
+        aCoder.encode(self.feel.fullString, forKey:"feel.fullString")
         
         //Wind
-        aCoder.encode(self.wind?.mph, forKey:"wind.mph")
-        aCoder.encode(self.wind?.kph, forKey:"wind.kph")
-        aCoder.encode(self.wind?.dir, forKey:"wind.dir")
-        aCoder.encode(self.wind?.degrees, forKey:"wind.degrees")
+        aCoder.encode(self.wind.mph, forKey:"wind.mph")
+        aCoder.encode(self.wind.kph, forKey:"wind.kph")
+        aCoder.encode(self.wind.dir, forKey:"wind.dir")
+        aCoder.encode(self.wind.degrees, forKey:"wind.degrees")
      
         //Visibility
-        aCoder.encode(self.visibility?.mi, forKey:"visibility.mi")
-        aCoder.encode(self.visibility?.km, forKey:"visibility.km")
+        aCoder.encode(self.visibility.mi, forKey:"visibility.mi")
+        aCoder.encode(self.visibility.km, forKey:"visibility.km")
     }
 }
 
@@ -492,6 +573,179 @@ public class ForecastResult: IWeatherResult{
     }
 }
 
+public class Forecast10Result: IWeatherResult{
+    
+    var forecastText:[TextForecast] = []
+    var simplyForecast:[SimpleForecast] = []
+    
+    init(_ json:JSONDictionary) {
+        super.init()
+        
+        if let fo = json["forecast"] as? JSONDictionary{
+            
+            if let tf = fo["txt_forecast"] as? JSONDictionary{
+                
+                if let fd = tf["forecastday"] as? JSONArray{
+                    
+                    for item in fd {
+                        
+                        let period = item["period"]!! as! Int
+                        let title = item["title"]!! as! String
+                        let desc = item["fcttext"]!! as! String
+                        let metric = item["fcttext_metric"]!! as! String
+                        //(period:Int, title:String, description:String, metric:String)
+                        forecastText.append((period,title,desc,metric))
+                    }
+                }
+            }
+            
+            if let sf = fo["simpleforecast"] as? JSONDictionary{
+                
+                if let fd = sf["forecastday"] as? JSONArray{
+                    
+                    for item in fd {
+                        
+                        let period = item["period"]!! as! Int
+                        let high = item["high"]!! as! JSONDictionary
+                        let low = item["low"]!! as! JSONDictionary
+                        let cond = item["conditions"] as! String
+                        let mw = item["maxwind"] as! JSONDictionary
+                        let aw = item["avewind"] as! JSONDictionary
+                        let avgAh = item["avehumidity"] as! Double
+                        let maxAh = item["maxhumidity"] as! Double
+                        let minAh = item["minhumidity"] as! Double
+                        let date = item["date"] as! JSONDictionary
+                        
+                        let highTemp = ("\(high["celsius"]!)", "\(high["fahrenheit"]!)", "")
+                        let lowTemp = ("\(low["celsius"]!)", "\(low["fahrenheit"]!)", "")
+                        let maxWind:Wind = ("\(mw["mph"]!)","\(mw["kph"]!)","\(mw["dir"]!)",mw["degrees"] as! Double)
+                        let avgWind:Wind = ("\(aw["mph"]!)","\(aw["kph"]!)","\(aw["dir"]!)",aw["degrees"] as! Double)
+                        let wDate = ("\(date["day"]!)", "\(date["month"]!)", "\(date["year"]!)", "\(date["hour"]!)","\(date["min"]!)", "\(date["sec"]!)", "\(date["ampm"]!)")
+                        let dateDescription = ("\(date["monthname"]!)", "\(date["monthname_short"]!)", "\(date["weekday"]!)", "\(date["weekday_short"]!)")
+                        
+                        simplyForecast.append((period, highTemp, lowTemp, cond, maxWind, avgWind, avgAh, maxAh, minAh, wDate, dateDescription))
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init()
+        
+        //forecast Text
+        for i in 0...19{
+            let period = aDecoder.decodeInt32(forKey: "forecastText.period.\(i)")
+            let title = aDecoder.decodeObject(forKey: "forecastText.title.\(i)")! as! String
+            let desc = aDecoder.decodeObject(forKey: "forecastText.desc.\(i)")! as! String
+            let metric = aDecoder.decodeObject(forKey: "forecastText.metric.\(i)")! as! String
+            
+            self.forecastText.append((Int(period),title,desc,metric))
+        }
+        
+        //simple forecast
+        for i in 0...9{
+            let period = aDecoder.decodeInt32(forKey: "simplyForecast.period.\(i)")
+            
+            let highTemp = (aDecoder.decodeObject(forKey: "simplyForecast.high.celsius.\(i)") as! String,
+                            aDecoder.decodeObject(forKey: "simplyForecast.high.fahrenheit.\(i)") as! String,
+                            aDecoder.decodeObject(forKey: "simplyForecast.high.fullString.\(i)") as! String)
+            
+            let lowTemp = (aDecoder.decodeObject(forKey: "simplyForecast.low.celsius.\(i)") as! String,
+                           aDecoder.decodeObject(forKey: "simplyForecast.low.fahrenheit.\(i)") as! String,
+                           aDecoder.decodeObject(forKey: "simplyForecast.low.fullString.\(i)") as! String)
+            
+            let cond = aDecoder.decodeObject(forKey: "simplyForecast.conditions.\(i)") as! String
+            
+            let maxWind:Wind = (aDecoder.decodeObject(forKey: "simplyForecast.maxWind.mph.\(i)") as! String,
+                                aDecoder.decodeObject(forKey: "simplyForecast.maxWind.kph.\(i)") as! String,
+                                aDecoder.decodeObject(forKey: "simplyForecast.maxWind.dir.\(i)") as! String,
+                                aDecoder.decodeDouble(forKey: "simplyForecast.maxWind.degrees.\(i)") )
+            
+            let avgWind:Wind = (aDecoder.decodeObject(forKey: "simplyForecast.avgWind.mph.\(i)") as! String,
+                                aDecoder.decodeObject(forKey: "simplyForecast.avgWind.kph.\(i)") as! String,
+                                aDecoder.decodeObject(forKey: "simplyForecast.avgWind.dir.\(i)") as! String,
+                                aDecoder.decodeDouble(forKey: "simplyForecast.avgWind.degrees.\(i)") )
+            
+            let avgAh = aDecoder.decodeDouble(forKey: "simplyForecast.aveHumdity.\(i)")
+            
+            let maxAh = aDecoder.decodeDouble(forKey: "simplyForecast.maxHumidity.\(i)")
+            
+            let minAh = aDecoder.decodeDouble(forKey: "simplyForecast.minHumidity.\(i)")
+            
+            let wDate = (aDecoder.decodeObject(forKey: "simplyForecast.dateTime.day.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.month.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.year.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.hour.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.min.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.sec.\(i)") as! String,
+                         aDecoder.decodeObject(forKey: "simplyForecast.dateTime.ampm.\(i)") as! String)
+            
+            let dateDescription = (aDecoder.decodeObject(forKey: "simplyForecast.month.month.\(i)") as! String,
+                                   aDecoder.decodeObject(forKey: "simplyForecast.month.month_short.\(i)") as! String,
+                                   aDecoder.decodeObject(forKey: "simplyForecast.month.weekday.\(i)") as! String,
+                                   aDecoder.decodeObject(forKey: "simplyForecast.month.weekday_short.\(i)") as! String)
+            
+            simplyForecast.append((Int(period), highTemp, lowTemp, cond, maxWind, avgWind, avgAh, maxAh, minAh, wDate, dateDescription))
+        }
+    }
+    
+    public override func encode(with aCoder: NSCoder) {
+        
+        //forecastText
+        for i in 0...19 {
+            aCoder.encode(self.forecastText[i].period, forKey:"forecastText.period.\(i)")
+            aCoder.encode(self.forecastText[i].title, forKey:"forecastText.title.\(i)")
+            aCoder.encode(self.forecastText[i].description, forKey:"forecastText.desc.\(i)")
+            aCoder.encode(self.forecastText[i].metric, forKey:"forecastText.metric.\(i)")
+        }
+        
+        //simple forecast
+        for i in 0...9 {
+            
+            aCoder.encode(self.simplyForecast[i].period, forKey:"simplyForecast.period.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].high.celsius, forKey:"simplyForecast.high.celsius.\(i)")
+            aCoder.encode(self.simplyForecast[i].high.fahrenheit, forKey:"simplyForecast.high.fahrenheit.\(i)")
+            aCoder.encode(self.simplyForecast[i].high.fullString, forKey:"simplyForecast.high.fullString.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].low.celsius, forKey:"simplyForecast.low.celsius.\(i)")
+            aCoder.encode(self.simplyForecast[i].low.fahrenheit, forKey:"simplyForecast.low.fahrenheit.\(i)")
+            aCoder.encode(self.simplyForecast[i].low.fullString, forKey:"simplyForecast.low.fullString.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].conditions, forKey:"simplyForecast.conditions.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].maxWind.mph, forKey:"simplyForecast.maxWind.mph.\(i)")
+            aCoder.encode(self.simplyForecast[i].maxWind.kph, forKey:"simplyForecast.maxWind.kph.\(i)")
+            aCoder.encode(self.simplyForecast[i].maxWind.dir, forKey:"simplyForecast.maxWind.dir.\(i)")
+            aCoder.encode(self.simplyForecast[i].maxWind.degrees, forKey:"simplyForecast.maxWind.degrees.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].avgWind.mph, forKey:"simplyForecast.avgWind.mph.\(i)")
+            aCoder.encode(self.simplyForecast[i].avgWind.kph, forKey:"simplyForecast.avgWind.kph.\(i)")
+            aCoder.encode(self.simplyForecast[i].avgWind.dir, forKey:"simplyForecast.avgWind.dir.\(i)")
+            aCoder.encode(self.simplyForecast[i].avgWind.degrees, forKey:"simplyForecast.avgWind.degrees.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].aveHumdity, forKey:"simplyForecast.aveHumdity.\(i)")
+            aCoder.encode(self.simplyForecast[i].maxHumidity, forKey:"simplyForecast.maxHumidity.\(i)")
+            aCoder.encode(self.simplyForecast[i].minHumidity, forKey:"simplyForecast.minHumidity.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].dateTime.day, forKey:"simplyForecast.dateTime.day.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.month, forKey:"simplyForecast.dateTime.month.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.year, forKey:"simplyForecast.dateTime.year.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.hour, forKey:"simplyForecast.dateTime.hour.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.min, forKey:"simplyForecast.dateTime.min.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.sec, forKey:"simplyForecast.dateTime.sec.\(i)")
+            aCoder.encode(self.simplyForecast[i].dateTime.ampm, forKey:"simplyForecast.dateTime.ampm.\(i)")
+            
+            aCoder.encode(self.simplyForecast[i].month.month, forKey:"simplyForecast.month.month.\(i)")
+            aCoder.encode(self.simplyForecast[i].month.month_short, forKey:"simplyForecast.month.month_short.\(i)")
+            aCoder.encode(self.simplyForecast[i].month.weekday, forKey:"simplyForecast.month.weekday.\(i)")
+            aCoder.encode(self.simplyForecast[i].month.weekday_short, forKey:"simplyForecast.month.weekday_short.\(i)")
+        }
+    }
+}
+
 //http://api.wunderground.com/api/826830b16b7d2179/history_20060405/q/CA/San_Francisco.json
 public class HistoryResult: IWeatherResult{
     
@@ -539,12 +793,12 @@ public class HistoryResult: IWeatherResult{
                          aDecoder.decodeObject(forKey: "history.temp.fahrenheit.\(i)") as! String,
                          aDecoder.decodeObject(forKey: "history.temp.fullString.\(i)") as! String)
           
-             let conditions = (aDecoder.decodeBool(forKey: "history.cond.fog.\(i)") as! Bool,
-                               aDecoder.decodeBool(forKey: "history.cond.rain.\(i)") as! Bool,
-                               aDecoder.decodeBool(forKey: "history.cond.snow.\(i)") as! Bool,
-                               aDecoder.decodeBool(forKey: "history.cond.hail.\(i)") as! Bool,
-                               aDecoder.decodeBool(forKey: "history.cond.thunder.\(i)") as! Bool,
-                               aDecoder.decodeBool(forKey: "history.cond.tornado.\(i)") as! Bool)
+             let conditions = (aDecoder.decodeBool(forKey: "history.cond.fog.\(i)") ,
+                               aDecoder.decodeBool(forKey: "history.cond.rain.\(i)") ,
+                               aDecoder.decodeBool(forKey: "history.cond.snow.\(i)") ,
+                               aDecoder.decodeBool(forKey: "history.cond.hail.\(i)") ,
+                               aDecoder.decodeBool(forKey: "history.cond.thunder.\(i)") ,
+                               aDecoder.decodeBool(forKey: "history.cond.tornado.\(i)") )
 
             history.append((wDate,temp,conditions))
         }
@@ -629,18 +883,18 @@ public class HourlyResult : IWeatherResult{
                                 aDecoder.decodeObject(forKey: "hours.description.weekday_short.\(i)") as! String)
          
             let high = (aDecoder.decodeObject(forKey: "hours.high.celsius.\(i)") as! String, 
-                        aDecoder.decodeObject(forKey: "hours.high.farehenit.\(i)") as! String, 
+                        aDecoder.decodeObject(forKey: "hours.high.fahrenheit.\(i)") as! String, 
                         aDecoder.decodeObject(forKey: "hours.high.fullString.\(i)") as! String)
          
             let low = (aDecoder.decodeObject(forKey: "hours.low.celsius.\(i)") as! String, 
-                       aDecoder.decodeObject(forKey: "hours.low.farehenit.\(i)") as! String, 
+                       aDecoder.decodeObject(forKey: "hours.low.fahrenheit.\(i)") as! String, 
                        aDecoder.decodeObject(forKey: "hours.low.fullString.\(i)") as! String)
          
             let cond = aDecoder.decodeObject(forKey: "hours.cond.\(i)") as! String
             let humi = aDecoder.decodeObject(forKey: "hours.humidity.\(i)") as! String
          
             let feel = (aDecoder.decodeObject(forKey: "hours.feelLike.celsius.\(i)") as! String, 
-                       aDecoder.decodeObject(forKey: "hours.feelLike.farehenit.\(i)") as! String, 
+                       aDecoder.decodeObject(forKey: "hours.feelLike.fahrenheit.\(i)") as! String, 
                        aDecoder.decodeObject(forKey: "hours.feelLike.fullString.\(i)") as! String)
          
             let uv = aDecoder.decodeObject(forKey: "hours.uvindex.\(i)") as! String
@@ -673,7 +927,7 @@ public class HourlyResult : IWeatherResult{
             aCoder.encode(self.hours[i].description.weekday_short, forKey:"hours.description.weekday_short.\(i)")
          
             aCoder.encode(self.hours[i].high.celsius, forKey:"hours.high.celsius.\(i)")
-            aCoder.encode(self.hours[i].high.fahrenheit, forKey:"hours.high.farehenit.\(i)")
+            aCoder.encode(self.hours[i].high.fahrenheit, forKey:"hours.high.fahrenheit.\(i)")
             aCoder.encode(self.hours[i].high.fullString, forKey:"hours.high.fullString.\(i)")
       
             aCoder.encode(self.hours[i].low.celsius, forKey:"hours.low.celsius.\(i)")

@@ -18,6 +18,7 @@ public enum Entity:String {
 
 public enum WeatherResultType:String{
     
+    case AutoComplete = "AutoComplete"
     case Astronomy = "Astronomy"
     case Condition = "Condition"
     case Forecast = "Forecast"

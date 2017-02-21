@@ -23,7 +23,7 @@ class Condition2PageController: UIViewController {
         }
     }
     
-    var dailyResult:ForecastResult?{
+    var dailyResult:Forecast10Result?{
         didSet{
             dtDaily.records = dailyResult!
         }
@@ -34,7 +34,7 @@ class Condition2PageController: UIViewController {
         super.viewDidLoad()
         
         self.collDaily.register(UINib(nibName:"DailyIconCell",bundle:nil), forCellWithReuseIdentifier: "Cell")
-       self.collHourly.register(UINib(nibName:"HourlyIconCell",bundle:nil), forCellWithReuseIdentifier: "Cell")
+        self.collHourly.register(UINib(nibName:"HourlyIconCell",bundle:nil), forCellWithReuseIdentifier: "Cell")
     }
 
     override func didReceiveMemoryWarning() {

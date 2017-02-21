@@ -8,11 +8,13 @@
 
 import UIKit
 import SnackKit
+import CoreLocation
 
 private let SegueOfContainer = "SegueOfContainer"
 
-class MainController: UIViewController {
+class MainController: UIViewController, CLLocationManagerDelegate {
 
+    // MARK: - UI Fields
     @IBOutlet var mainView: UIView!
     @IBOutlet weak var weatherView: UIView!
     @IBOutlet weak var imgPlacemarker: UIImageView!
@@ -33,28 +35,21 @@ class MainController: UIViewController {
     @IBOutlet weak var constTaskingHeight: NSLayoutConstraint!
     @IBOutlet weak var constDetailHeight: NSLayoutConstraint!
     
-    var container:ContainerController?
-    
-    let today:Date = Date().today
+    // MARK: - Variables
     var dHeight = CGFloat(0.0)
     var counter:Int = 0
     var timer = Timer()
     var isExpand = false
-    var userLocation:UserLocation?
+    
+    var vm:MainWeatherVM?
+    var shortcutWD:[(icon:String,value:String)] = []
     var weatherDesc:String = ""{
         didSet{
             self.lblConditionDesc.text = weatherDesc
         }
     }
-    var weatherInfo:[(icon:String,value:String)] = []
     
-    //API Results
-    var conditions:ConditionsResult?
-    var astronomy:AstronomyResult?
-    var forecast:ForecastResult?
-    var hourly:HourlyResult?
-    var daily:ForecastResult?
-    
+    // MARK: - Screen Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,11 +64,20 @@ class MainController: UIViewController {
         self.tblTaskingList.translatesAutoresizingMaskIntoConstraints = false
         
         self.resetFieldValues()
+        
+        LocationManager.shared.locationManager.delegate = self
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.initConstantHeights()
-        self.refreshWeatherInfo()
+        
+        if self.timer.timeInterval <= 0 {
+            self.initConstantHeights()
+        }
+        
+        
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -106,17 +110,7 @@ class MainController: UIViewController {
                 self.lblFeelLike.isHidden = self.isExpand
                 self.imgWeatherInfo.isHidden = self.isExpand
             })
-            
-            if let _ = self.container, let pCtrl = self.container!.pageController{
-                
-                if self.isExpand{
-                    pCtrl.startPagesSpining()
-                }else{
-                    pCtrl.stopPageSpining()
-                }
-            }
         }
-        
     }
     
     private func initConstantHeights(){
@@ -152,162 +146,19 @@ class MainController: UIViewController {
         self.btnExpand.setImage(self.isExpand ? ddUp : ddDown, for: .normal)
     }
     
-    private func refreshWeatherInfo(){
-
-        //Retrieve Last Location
-        let lastLocation = try! LocationRepo.shared.GetLocation(.Phone,on: self.today)
+    public func updateWeatherCondition(){
         
-        func createNewWeather(){
-            
-            self.userLocation!.type = LocationType.Phone
-            
-            let newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
-            let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
-                
-            self.getWeatherAPIResults(at: newLocation!, linkTo: newWeather!)
-        }
+        self.lblFeelLike.TransiteFromTop(duration: 0.3)
+        self.lblFeelLike.text = self.shortcutWD[self.counter].value
         
-        func loadLastWeather(){
-            self.getWeatherSavedResult(at: lastLocation!)
-        }
+        self.imgWeatherInfo.isHidden = self.isExpand ? true : false
+        self.imgWeatherInfo.TransiteFromTop(duration: 0.3)
+        self.imgWeatherInfo.image = UIImage(named: self.shortcutWD[self.counter].icon)
         
-        LocationManager.shared.GetNearestCity { (json) in
-
-            guard json.count > 0 else{
-                //Goto Location Service Disable Screen
-                return
-            }
-            
-            var isNewWeather:Bool = true
-            
-            self.userLocation = UserLocation(address: json)
-            let isNewLocation:Bool = lastLocation == nil ? true : (lastLocation?.locationCity != self.userLocation!.city)
-            
-            self.lblPlaceName.text = self.userLocation!.city
-            gCountryCode = self.userLocation!.countryCode!
-        
-            if !isNewLocation{
-                 //Same Location, retrieve Weather data from CoreData If weahter last modifiedOn < 30min elpased
-                if let lastWeatherDate = try! WeatherRepo.shared.GetWeather(on: self.today, at: lastLocation) {
-                    
-                    if let lastModifiedDate = lastWeatherDate.modifiedOn as? Date{
-                        isNewWeather = lastModifiedDate.elapsedInMinutes(Date().now) < 15 ? false : true
-                    }
-                }
-            }
-            
-            if isNewLocation || isNewWeather {
-                createNewWeather()
-            }else{
-                loadLastWeather()
-            }
-        }
+        self.counter = (self.shortcutWD.count-1 == self.counter ? 0 : self.counter + 1)
     }
 
-    private func getWeatherSavedResult(at location:Location){
-        
-        if let weather = try! WeatherRepo.shared.GetWeather(on: self.today, at:location) {
-            
-            if let results = WeatherDetailRepo.shared.GetWeatherDetail(on: self.today, header: weather){
-             
-                for re in results{
-                    
-                    let type = WeatherResultType(rawValue: re.wdType!)
-                    
-                    switch type! {
-                    case .Astronomy:
-                        self.astronomy = re.wdResult as? AstronomyResult
-                        self.populateAstronomyResult()
-                    case .Condition:
-                        self.conditions = re.wdResult as? ConditionsResult
-                        self.populateConditionsResult()
-                    case .Forecast:
-                        self.forecast = re.wdResult as? ForecastResult
-                        self.populateForecastResult()
-                    case .Forecast10Day:
-                        self.forecast = re.wdResult as? ForecastResult
-                        self.populateForecast10DaysResult()
-                    case .Hourly:
-                        self.hourly = re.wdResult as? HourlyResult
-                        self.populateHourlyResult()
-                    default:
-                        break
-                    }
-                }
-            }
-        }
-    }
-
-    private func getWeatherAPIResults(at location:Location, linkTo newWeather:Weather){
-       
-        let location:String = location.locationCity!
-        
-        WeatherAPI.shared.GetCondition(at: location) { (result) in
-            
-            DispatchQueue.main.async(){
-                
-                self.conditions = result.item[0]
-                self.populateConditionsResult()
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather)
-                newWeather.addToDetail(detail)
-            }
-        }
-        
-        WeatherAPI.shared.GetAstronomy(at: location) { (result) in
-            
-            DispatchQueue.main.async(){
-                
-                self.astronomy = result.item[0]
-                self.populateAstronomyResult()
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Astronomy, header: newWeather)
-                newWeather.addToDetail(detail)
-            }
-        }
-        
-        WeatherAPI.shared.GetForecast(at: location) { (result) in
-            
-            DispatchQueue.main.async {
-                
-                self.forecast = result.item[0]
-                self.populateForecastResult()
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Forecast, header: newWeather)
-                newWeather.addToDetail(detail)
-            }
-        }
-        
-        WeatherAPI.shared.GetHourly(at: location) { (result) in
-            
-            DispatchQueue.main.async {
-                
-                self.hourly = result.item[0]
-                self.populateHourlyResult()
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Hourly, header: newWeather)
-                newWeather.addToDetail(detail)
-            }
-        }
-        
-        WeatherAPI.shared.GetForecast10Days(at: location, completion: { (result) in
-            
-            DispatchQueue.main.async {
-                
-                self.daily = result.item[0]
-                self.populateForecast10DaysResult()
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather)
-                newWeather.addToDetail(detail)
-                
-                DispatchQueue.main.async {
-                    print("Saving")
-                    _ = try! RepositoryBase.shared.Save()
-                }
-            }
-        })
-    }
-
+    // MARK: - Populate Weather Results
     private func populateConditionsResult(){
         
         if let cond = self.conditions{
@@ -320,41 +171,27 @@ class MainController: UIViewController {
                 o.populateConditionInfo()
             }
             
-            if let w = cond.weather {
-                
-                self.lblTemperature.text = gTemperatureUnit == SnackKit.TemperatureUnit.Celsius ?
-                    "\(w.temp.celsius.localize(format: "%.0f"))\(dsymbol)" :
-                    "\(w.temp.fahrenheit.localize(format: "%.0f"))\(dsymbol)"
-                
-                self.weatherDesc = "\(w.description)"
-                
-                self.imgCondition.image = WeatherStatic.GetIcon(name: w.description)
-                
-                self.weatherInfo.append(("Humidity_25"," Humidity \(w.humidity)"))
+            self.lblTemperature.text = gTemperatureUnit == SnackKit.TemperatureUnit.Celsius ?
+                    "\(cond.weather.temp.celsius.localize(format: "%.0f"))\(dsymbol)" :
+            "\(cond.weather.temp.fahrenheit.localize(format: "%.0f"))\(dsymbol)"
+            
+            self.weatherDesc = "\(cond.weather.description)"
+            
+            self.imgCondition.image = WeatherStatic.GetIcon(name: cond.weather.description)
+            
+            self.weatherInfo.append(("Humidity_25"," Humidity \(cond.weather.humidity)"))
+            
+            if gTemperatureUnit == SnackKit.TemperatureUnit.Celsius {
+                self.weatherInfo.append(("temperature_25"," Feels Like \(cond.feel.celsius.localize(format: "%.0f"))".degreeFormat))
+            }else{
+                self.weatherInfo.append(("temperature_25"," Feels Like \(cond.feel.fahrenheit.localize(format: "%.0f"))".degreeFormat))
             }
             
-            if let f = cond.feel {
-                //self.weatherInfo.append("Feels Like \(f.celcius.localize(format: "%.0f"))".degreeFormat)
-                if gTemperatureUnit == SnackKit.TemperatureUnit.Celsius {
-                    self.weatherInfo.append(("temperature_25"," Feels Like \(f.celsius.localize(format: "%.0f"))".degreeFormat))
-                }else{
-                    self.weatherInfo.append(("temperature_25"," Feels Like \(f.fahrenheit.localize(format: "%.0f"))".degreeFormat))
-                }
-            }
+            self.weatherInfo.append(("wind_25"," \(cond.wind.dir), \(cond.wind.mph)MPH"))
+            self.weatherInfo.append(("visible_25"," Visiblity \(cond.visibility.km)KM"))
+            self.weatherInfo.append(("uv_25","\(cond.uv.uvDescription)"))
             
-            if let w = cond.wind{
-                self.weatherInfo.append(("wind_25"," \(w.dir), \(w.mph)MPH"))
-            }
-            
-            if let v = cond.visibility{
-                self.weatherInfo.append(("visible_25"," Visiblity \(v.km)KM"))
-            }
-            
-            if let u = cond.uv{
-                self.weatherInfo.append(("uv_25","\(u.uvDescription)"))
-            }
-            
-            if self.weatherInfo.count > 0{
+            if self.shortcutWD.count > 0 && self.timer.timeInterval <= 0{
                 
                 self.timer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(MainController.updateWeatherCondition), userInfo: nil, repeats: true)
                 
@@ -378,14 +215,8 @@ class MainController: UIViewController {
                 o.populateAstronomyInfo()
             }
             
-            if let sr = astro.sunrise{
-                self.weatherInfo.append(("Sunrise_25"," Sunrise at " + "\(sr.hour):\(sr.minutes)".hour12Format))
-            }
-            
-            if let ss = astro.sunset{
-                self.weatherInfo.append(("Sunset_25"," Sunset at " + "\(ss.hour):\(ss.minutes)".hour12Format))
-            }
-
+             self.weatherInfo.append(("Sunrise_25"," Sunrise at " + "\(astro.sunrise.hour):\(astro.sunrise.minutes)".hour12Format))
+             self.weatherInfo.append(("Sunset_25"," Sunset at " + "\(astro.sunset.hour):\(astro.sunset.minutes)".hour12Format))
         }else{
             self.alert(title: "Warning", message: "Application is failed to get weather info from server.Please try again.")
         }
@@ -436,19 +267,7 @@ class MainController: UIViewController {
         }
     }
     
-    public func updateWeatherCondition(){
-    
-        self.lblFeelLike.TransiteFromTop(duration: 0.3)
-        self.lblFeelLike.text = self.weatherInfo[self.counter].value
-        
-        self.imgWeatherInfo.isHidden = self.isExpand ? true : false
-        self.imgWeatherInfo.TransiteFromTop(duration: 0.3)
-        self.imgWeatherInfo.image = UIImage(named: self.weatherInfo[self.counter].icon)
-        
-        self.counter = (self.weatherInfo.count-1 == self.counter ? 0 : self.counter + 1)
-    }
-    
-    // MARK : - Segue
+    // MARK: - Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == SegueOfContainer{
@@ -457,6 +276,19 @@ class MainController: UIViewController {
             destination.thisParent = self
             
             self.container = destination
+        }
+    }
+    
+    // MARK: - Location Delegate
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+
+        if status == .notDetermined || status == .denied{
+            self.btnExpand.isEnabled = false
+            self.lblPlaceName.text = "Location Unknown"
+        }else{
+            self.btnExpand.isEnabled = true
+            self.lblPlaceName.text = ""
+            self.vm!.retrieveWeatherInfo()
         }
     }
 }

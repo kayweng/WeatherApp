@@ -53,6 +53,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Get Phone TemperatureUnit
         gTemperatureUnit = SnackKit.TemperatureUnit(rawValue: AppRegion.temperateUnit)!
         
+//        let root = window?.rootViewController
+//        let nav = root as! UINavigationController
+//        
+//        let main = nav.viewControllers.first as! MainController
+//        
+//        //main.refreshWeatherInfo()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

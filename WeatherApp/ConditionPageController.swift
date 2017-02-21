@@ -51,9 +51,10 @@ class ConditionPageController: UITableViewController {
         self.tableView.delegate = self
         
         self.tableView.separatorStyle = .none
-        self.tableView.backgroundColor = .clear
+        //self.tableView.backgroundColor = .clear
+        self.tableView.backgroundColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.2)
         self.tableView.tableFooterView = UIView()
-
+        
         self.cellHumidity.separatorInset = .zero
         self.cellFeelsLike.separatorInset = .zero
         self.cellWind.separatorInset = .zero
@@ -87,25 +88,11 @@ class ConditionPageController: UITableViewController {
         
         if let cond = condResult {
             
-            if let w = cond.weather{
-                self.lblHumidityValue.text = w.humidity
-            }
-            
-            if let f = cond.feel{
-                self.lblFeelsLikeValue.text = "\(f.celsius) \(dsymbol)"
-            }
-            
-            if let w = cond.wind{
-                self.lblWindValue.text = "\(w.dir) \(w.mph)MPH"
-            }
-            
-            if let v = cond.visibility{
-                self.lblVisibilityValue.text = "\(v.km) KM"
-            }
-            
-            if let u = cond.uv{
-                self.lblUVValue.text = u.uvDescription + " (\(u))"
-            }
+            self.lblHumidityValue.text = cond.weather.humidity
+            self.lblFeelsLikeValue.text = "\(cond.feel.celsius)\(dsymbol)"
+            self.lblWindValue.text = "\(cond.wind.dir) \(cond.wind.mph)MPH"
+            self.lblVisibilityValue.text = "\(cond.visibility.km) KM"
+            self.lblUVValue.text = cond.uv.uvDescription + " (\(cond.uv))"
         }
     }
     
@@ -113,14 +100,8 @@ class ConditionPageController: UITableViewController {
         
         if let astro = astronomyResult{
             
-            if let sr = astro.sunrise{
-                self.lblSunriseValue.text = "\(sr.hour):\(sr.minutes)".hour12Format
-            }
-            
-            if let ss = astro.sunset{
-                self.lblSunsetValue.text = "\(ss.hour):\(ss.minutes)".hour12Format
-            }
-
+            self.lblSunriseValue.text = "\(astro.sunrise.hour):\(astro.sunrise.minutes)".hour12Format
+            self.lblSunsetValue.text = "\(astro.sunset.hour):\(astro.sunset.minutes)".hour12Format
         }
     }
     
@@ -131,7 +112,6 @@ class ConditionPageController: UITableViewController {
             self.tvDescription.text =  "Today : " + (
                 StaticFactory.currentPartOfDay() == PartsOfDay.Morning ||
                 StaticFactory.currentPartOfDay() == PartsOfDay.Afternoon ? forecast.forecastText[1].description : forecast.forecastText[0].description)
-            
         }
     }
     
@@ -139,13 +119,13 @@ class ConditionPageController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.row == 5 {
-            return CGFloat(50.0)
+            return CGFloat(50)
         }
         
-        if indexPath.row == 5 {
-            return CGFloat(80.0)
+        if indexPath.row == 6 {
+            return CGFloat(70)
         }
-
+        
         return CGFloat(40)
     }
 }
