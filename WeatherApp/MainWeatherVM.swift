@@ -124,20 +124,39 @@ public class MainWeatherVM {
         }
     }
     
-    private func retrieveWeatherAPIResult(){
+    private func GetLocationZMW(completion:(location:Location, storage:Weather)->Void){
         
         WeatherAPI.shared.GetLocationZMW(at: self.userLocation.city!, completion: { (result) in
             
             self.autoLocation = result.item[0]
             self.userLocation.type = LocationType.Phone
             
-            let newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
-            let newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
+            completion()
+        }
+    }
+    
+    private func retrieveWeatherAPIResult(){
+        
+        let queue = dispatch_get_Global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)
+        let group = DispatchGroup()
+        
+        var newLocation:Location?
+        var newWeather:Weather?
+        
+        group.enter()
+        func GetLocationZMW() {
+            
+            newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
+            newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
+            
             let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.autoLocation!, type: .AutoComplete, header: newWeather!)
             
             newWeather!.addToDetail(detail)
-            
-            WeatherAPI.shared.GetCondition(at: self.autoLocation!.zmw) { (result) in
+
+            group.leave()
+        }
+        
+        WeatherAPI.shared.GetCondition(at: self.autoLocation!.zmw) { (result) in
                 
                 DispatchQueue.main.async(){
                     
@@ -200,7 +219,6 @@ public class MainWeatherVM {
                     }
                 }
             })
-        })
     }
 
 }
