@@ -41,7 +41,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     var timer = Timer()
     var isExpand = false
     
-    var vm:MainWeatherVM?
+    
     var shortcutWD:[(icon:String,value:String)] = []
     var weatherDesc:String = ""{
         didSet{
@@ -49,9 +49,21 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    var vm:MainWeatherVM?{
+        didSet{
+            self.populateConditionsResult()
+            self.populateAstronomyResult()
+            self.populateForecastResult()
+            self.populateHourlyResult()
+            self.populateForecast10DaysResult()
+        }
+    }
+    
     // MARK: - Screen Functions
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        LocationManager.shared.locationManager.delegate = self
         
         self.weatherView.backgroundColor = .clear
         self.weatherView.backgroundColor = UIColor(patternImage: UIImage(named: "bg-night")!)
@@ -64,20 +76,14 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         self.tblTaskingList.translatesAutoresizingMaskIntoConstraints = false
         
         self.resetFieldValues()
-        
-        LocationManager.shared.locationManager.delegate = self
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
         if self.timer.timeInterval <= 0 {
             self.initConstantHeights()
+            self.initLocation()
         }
-        
-        
-        
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -101,7 +107,8 @@ class MainController: UIViewController, CLLocationManagerDelegate {
                 self.constDetailHeight.constant = CGFloat(0.0)
             }
 
-            self.changeButtonImage()
+            self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Down_50") : UIImage(named: "Double Up_50"), for: .normal)
+            
             self.vwDetails.layoutIfNeeded()
             self.mainView.layoutIfNeeded()
             
@@ -110,6 +117,17 @@ class MainController: UIViewController, CLLocationManagerDelegate {
                 self.lblFeelLike.isHidden = self.isExpand
                 self.imgWeatherInfo.isHidden = self.isExpand
             })
+        }
+    }
+    
+    // MARK : - Private Functions
+    private func initLocation(){
+        
+        LocationManager.shared.GetNearestCity { (json) in
+            
+            let location = UserLocation(address: json)
+            
+            self.vm = MainWeatherVM(location: location)
         }
     }
     
@@ -134,16 +152,8 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         self.lblConditionDesc.reset()
         self.lblMaxMinTemperature.reset()
         self.lblToday.text = Date().now.dayName
-        self.changeButtonImage()
         
-    }
-    
-    private func changeButtonImage(){
-       
-        let ddDown = UIImage(named: "Double Down_50")
-        let ddUp = UIImage(named: "Double Up_50")
-        
-        self.btnExpand.setImage(self.isExpand ? ddUp : ddDown, for: .normal)
+        self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Down_50") : UIImage(named: "Double Up_50"), for: .normal)
     }
     
     public func updateWeatherCondition(){
@@ -161,10 +171,10 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Populate Weather Results
     private func populateConditionsResult(){
         
-        if let cond = self.conditions{
+        if let cond = self.vm!.conditions{
             
             //Update Condition Page
-            if let _ = self.container, let pCtrl = self.container!.pageController{
+            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.condResult = cond
@@ -179,17 +189,17 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             
             self.imgCondition.image = WeatherStatic.GetIcon(name: cond.weather.description)
             
-            self.weatherInfo.append(("Humidity_25"," Humidity \(cond.weather.humidity)"))
+            self.shortcutWD.append(("Humidity_25"," Humidity \(cond.weather.humidity)"))
             
             if gTemperatureUnit == SnackKit.TemperatureUnit.Celsius {
-                self.weatherInfo.append(("temperature_25"," Feels Like \(cond.feel.celsius.localize(format: "%.0f"))".degreeFormat))
+                self.shortcutWD.append(("temperature_25"," Feels Like \(cond.feel.celsius.localize(format: "%.0f"))".degreeFormat))
             }else{
-                self.weatherInfo.append(("temperature_25"," Feels Like \(cond.feel.fahrenheit.localize(format: "%.0f"))".degreeFormat))
+                self.shortcutWD.append(("temperature_25"," Feels Like \(cond.feel.fahrenheit.localize(format: "%.0f"))".degreeFormat))
             }
             
-            self.weatherInfo.append(("wind_25"," \(cond.wind.dir), \(cond.wind.mph)MPH"))
-            self.weatherInfo.append(("visible_25"," Visiblity \(cond.visibility.km)KM"))
-            self.weatherInfo.append(("uv_25","\(cond.uv.uvDescription)"))
+            self.shortcutWD.append(("wind_25"," \(cond.wind.dir), \(cond.wind.mph)MPH"))
+            self.shortcutWD.append(("visible_25"," Visiblity \(cond.visibility.km)KM"))
+            self.shortcutWD.append(("uv_25","\(cond.uv.uvDescription)"))
             
             if self.shortcutWD.count > 0 && self.timer.timeInterval <= 0{
                 
@@ -205,18 +215,18 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateAstronomyResult(){
         
-        if let astro = self.astronomy{
+        if let astro = self.vm!.astronomy{
             
             //Update Condition Page
-            if let _ = self.container, let pCtrl = self.container!.pageController{
+            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.astronomyResult = astro
                 o.populateAstronomyInfo()
             }
             
-             self.weatherInfo.append(("Sunrise_25"," Sunrise at " + "\(astro.sunrise.hour):\(astro.sunrise.minutes)".hour12Format))
-             self.weatherInfo.append(("Sunset_25"," Sunset at " + "\(astro.sunset.hour):\(astro.sunset.minutes)".hour12Format))
+             self.shortcutWD.append(("Sunrise_25"," Sunrise at " + "\(astro.sunrise.hour):\(astro.sunrise.minutes)".hour12Format))
+             self.shortcutWD.append(("Sunset_25"," Sunset at " + "\(astro.sunset.hour):\(astro.sunset.minutes)".hour12Format))
         }else{
             self.alert(title: "Warning", message: "Application is failed to get weather info from server.Please try again.")
         }
@@ -224,10 +234,10 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateForecastResult(){
         
-        if let fc = self.forecast{
+        if let fc = self.vm!.forecast{
             
             //Update Condition Page
-            if let _ = self.container, let pCtrl = self.container!.pageController{
+            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.forecastResult = fc
@@ -240,16 +250,16 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             let highTemp = gTemperatureUnit == .Celsius ? todayFC.high.celsius.degreeFormat : todayFC.high.fahrenheit.degreeFormat
             let lowTemp = gTemperatureUnit == .Celsius ? todayFC.low.celsius.degreeFormat : todayFC.low.fahrenheit.degreeFormat
             
-            self.weatherInfo.append(("temperature_25","     \(lowTemp) / \(highTemp)"))
+            self.shortcutWD.append(("temperature_25","\(lowTemp) / \(highTemp)"))
             self.lblMaxMinTemperature.text = "\(lowTemp) / \(highTemp)"
         }
     }
     
     private func populateHourlyResult(){
         
-        if let hr = self.hourly{
+        if let hr = self.vm!.hourly{
             
-            if let _ = self.container, let pCtrl = self.container!.pageController{
+            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
                 o.hourlyResult = hr
             }
@@ -258,9 +268,9 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateForecast10DaysResult(){
         
-        if let daily = self.daily{
+        if let daily = self.vm!.daily{
             
-            if let _ = self.container, let pCtrl = self.container!.pageController{
+            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
                 o.dailyResult = daily
             }
@@ -275,7 +285,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             let destination = segue.destination as! ContainerController
             destination.thisParent = self
             
-            self.container = destination
+            self.vm!.container = destination
         }
     }
     
