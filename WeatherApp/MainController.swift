@@ -35,6 +35,8 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var constTaskingHeight: NSLayoutConstraint!
     @IBOutlet weak var constDetailHeight: NSLayoutConstraint!
     
+    var container:ContainerController?
+    
     // MARK: - Variables
     var dHeight = CGFloat(0.0)
     var counter:Int = 0
@@ -107,7 +109,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
                 self.constDetailHeight.constant = CGFloat(0.0)
             }
 
-            self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Down_50") : UIImage(named: "Double Up_50"), for: .normal)
+            self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Up_50") : UIImage(named: "Double Down_50"), for: .normal)
             
             self.vwDetails.layoutIfNeeded()
             self.mainView.layoutIfNeeded()
@@ -126,8 +128,11 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         LocationManager.shared.GetNearestCity { (json) in
             
             let location = UserLocation(address: json)
+            self.lblPlaceName.text = location.city
             
-            self.vm = MainWeatherVM(location: location)
+            self.vm = MainWeatherVM(location: location, completion: { 
+                
+            })
         }
     }
     
@@ -153,7 +158,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         self.lblMaxMinTemperature.reset()
         self.lblToday.text = Date().now.dayName
         
-        self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Down_50") : UIImage(named: "Double Up_50"), for: .normal)
+        self.btnExpand.setImage(self.isExpand ? UIImage(named: "Double Up_50") : UIImage(named: "Double Down_50"), for: .normal)
     }
     
     public func updateWeatherCondition(){
@@ -174,7 +179,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         if let cond = self.vm!.conditions{
             
             //Update Condition Page
-            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
+            if let _ = self.container, let pCtrl = self.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.condResult = cond
@@ -218,7 +223,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         if let astro = self.vm!.astronomy{
             
             //Update Condition Page
-            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
+            if let _ = self.container, let pCtrl = self.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.astronomyResult = astro
@@ -237,7 +242,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         if let fc = self.vm!.forecast{
             
             //Update Condition Page
-            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
+            if let _ = self.container, let pCtrl = self.container!.pageController{
                 
                 let o = pCtrl.pages[0] as! ConditionPageController
                 o.forecastResult = fc
@@ -259,7 +264,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         
         if let hr = self.vm!.hourly{
             
-            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
+            if let _ = self.container, let pCtrl = self.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
                 o.hourlyResult = hr
             }
@@ -270,7 +275,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         
         if let daily = self.vm!.daily{
             
-            if let _ = self.vm!.container, let pCtrl = self.vm!.container!.pageController{
+            if let _ = self.container, let pCtrl = self.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
                 o.dailyResult = daily
             }
@@ -284,8 +289,8 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             
             let destination = segue.destination as! ContainerController
             destination.thisParent = self
-            
-            self.vm!.container = destination
+
+            self.container = destination
         }
     }
     
@@ -298,7 +303,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         }else{
             self.btnExpand.isEnabled = true
             self.lblPlaceName.text = ""
-            self.vm!.retrieveWeatherInfo()
+            initLocation()
         }
     }
 }

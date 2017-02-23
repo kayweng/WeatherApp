@@ -23,15 +23,15 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="yxD-No-gx3"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Clear" translatesAutoresizingMaskIntoConstraints="NO" id="Aix-x1-xi2">
-                        <rect key="frame" x="30" y="80" width="40" height="40"/>
+                        <rect key="frame" x="20" y="70" width="60" height="60"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="40" id="cY3-nw-jp9"/>
-                            <constraint firstAttribute="width" constant="40" id="vtb-m9-VVS"/>
+                            <constraint firstAttribute="height" constant="60" id="cY3-nw-jp9"/>
+                            <constraint firstAttribute="width" constant="60" id="vtb-m9-VVS"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="25 / 27" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="guQ-4g-0gf">
@@ -39,7 +39,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="ltm-e2-LvW"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>

@@ -69,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationUIConfigure(){
 
-
     }
 
     // MARK: - Core Data stack

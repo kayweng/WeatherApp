@@ -18,6 +18,13 @@ extension NSLayoutConstraint{
     }
 }
 
+extension UILabel{
+    var defaultFont: UIFont? {
+        get { return self.font }
+        set { self.font = newValue }
+    }
+}
+
 extension String {
     
     var degreeFormat:String{

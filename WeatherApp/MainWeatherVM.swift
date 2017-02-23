@@ -11,8 +11,6 @@ import SnackKit
 
 public class MainWeatherVM {
     
-    var container:ContainerController?
-    
     var autoLocation:AutoLocationResult?
     var conditions:ConditionsResult?
     var astronomy:AstronomyResult?
@@ -28,18 +26,28 @@ public class MainWeatherVM {
     
     let today = Date().now
     
-    public init(location:UserLocation){
+    public init(location:UserLocation, completion:@escaping ()->Void){
         
         self.userLocation = location
+        self.retrieveWeatherInfo(override: false) {
+            completion()
+        }
     }
     
     // MARK: - Public Functions
-    public func retrieveWeatherInfo(override:Bool = false){
+    public func retrieveWeatherInfo(override:Bool = false, completion:@escaping ()->Void){
         
-        if isNeededReloadWeather() || override{
-            self.retrieveWeatherAPIResult()
+        if override || self.isNeededReloadWeather() {
+            
+            self.retrieveWeatherAPIResult(completion: {
+                completion()
+            })
+            
         }else{
-            self.retrieveLastSavedWeatherResult()
+            
+            self.retrieveLastSavedWeatherResult(completion: {
+                completion()
+            })
         }
     }
     
@@ -77,7 +85,7 @@ public class MainWeatherVM {
         return isNewLocation || isWeatherExpired
     }
 
-    private func retrieveLastSavedWeatherResult(){
+    private func retrieveLastSavedWeatherResult(completion:()->Void){
         
         do{
             if let lastLocation = try LocationRepo.shared.GetLocation(.Phone,on: self.today) {
@@ -93,19 +101,14 @@ public class MainWeatherVM {
                             switch type! {
                             case .Astronomy:
                                 self.astronomy = re.wdResult as? AstronomyResult
-                                //self.populateAstronomyResult()
                             case .Condition:
                                 self.conditions = re.wdResult as? ConditionsResult
-                                //self.populateConditionsResult()
                             case .Forecast:
                                 self.forecast = re.wdResult as? ForecastResult
-                                //self.populateForecastResult()
                             case .Forecast10Day:
                                 self.daily = re.wdResult as? Forecast10Result
-                                //self.populateForecast10DaysResult()
                             case .Hourly:
                                 self.hourly = re.wdResult as? HourlyResult
-                                //self.populateHourlyResult()
                             case .AutoComplete:
                                 self.autoLocation = re.wdResult as? AutoLocationResult
                             default:
@@ -114,8 +117,9 @@ public class MainWeatherVM {
                         }
                     }
                 }
-                
             }
+            
+            completion()
 
         }catch CoreDataError.ReadError{
             
@@ -123,159 +127,154 @@ public class MainWeatherVM {
             
         }
     }
+
     
-    private func GetLocationZMW(completion:@escaping ()->Void){
+    private func GetConditionAPIResult(completion:@escaping ()->Void){
         
-        WeatherAPI.shared.GetLocationZMW(at: self.userLocation.city!, completion: { (result) in
+        WeatherAPI.shared.GetCondition(at: self.autoLocation!.queryString) { (result) in
             
-            self.autoLocation = result.item[0]
-            self.userLocation.type = LocationType.Phone
+            self.conditions = result.item[0]
+            
+            completion()
+        }
+    }
+    
+    private func GetAstronomyAPIResult(completion:@escaping ()->Void){
+        
+        WeatherAPI.shared.GetAstronomy(at: self.autoLocation!.queryString) { (result) in
+            
+            self.astronomy = result.item[0]
+            
+            completion()
+        }
+    }
+    
+    private func GetForecastAPIResult(completion:@escaping ()->Void){
+        
+        WeatherAPI.shared.GetForecast(at: self.autoLocation!.queryString) { (result) in
+            
+            self.forecast = result.item[0]
+            
+            completion()
+        }
+    }
+    
+    private func GetHourlyAPIResult(completion:@escaping ()->Void){
+        
+        WeatherAPI.shared.GetHourly(at: self.autoLocation!.queryString) { (result) in
+            
+            self.hourly = result.item[0]
+            
+            completion()
+        }
+    }
+    
+    private func GetForecast10DaysAPIResult(completion:@escaping ()->Void){
+        
+        WeatherAPI.shared.GetForecast10Days(at: self.autoLocation!.queryString, completion: { (result) in
+            
+            self.daily = result.item[0]
             
             completion()
         })
     }
     
-    private func GetConditionAPIResult(completion:()->Void){
+    private func retrieveWeatherAPIResult(completion:@escaping ()->Void){
         
-        WeatherAPI.shared.GetCondition(at: self.autoLocation!.zmw) { (result) in
-            
-            self.conditions = result.item[0]
-        }
-    }
-    
-    private func GetAstronomyAPIResult(completion:()->Void){
+        WeatherAPI.shared.GetLocationZMW(at: self.userLocation.city!, completion: { (result) in
         
-        WeatherAPI.shared.GetAstronomy(at: self.autoLocation!.zmw) { (result) in
+            let queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
+            let group = DispatchGroup()
             
-            self.astronomy = result.item[0]
-        }
-    }
-    
-    private func GetForecastAPIResult(completion:()->Void){
+            var newLocation:Location?
+            var newWeather:Weather?
         
-        WeatherAPI.shared.GetForecast(at: self.autoLocation!.zmw) { (result) in
+            self.autoLocation = result.item[0]
+            self.userLocation.type = LocationType.Phone
             
-            self.forecast = result.item[0]
-        }
-    }
-    
-    private func GetHourlyAPIResult(completion:()->Void){
-        
-        WeatherAPI.shared.GetHourly(at: self.autoLocation!.zmw) { (result) in
+            newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
+            newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
             
-            self.hourly = result.item[0]
-        }
-    }
-    
-    private func GetForecast10DaysAPIResult(completion:()->Void){
-        
-        WeatherAPI.shared.GetForecast10Days(at: self.autoLocation!.zmw, completion: { (result) in
+            let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.autoLocation!, type: .AutoComplete, header: newWeather!)
+            newWeather!.addToDetail(detail)
             
-            self.daily = result.item[0]
+            print("Get Location ZMW")
+            
+            //2
+            group.enter()
+            queue.async(group: group, qos: DispatchQoS.userInitiated, flags: DispatchWorkItemFlags.assignCurrentContext, execute: {
+                
+                self.GetConditionAPIResult(completion: {
+                    
+                    let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather!)
+                    newWeather!.addToDetail(detail)
+                    print("Get Condition")
+                    group.leave()
+                })
+            })
+            
+            //3
+            group.enter()
+            queue.async(group: group, qos: DispatchQoS.userInitiated, flags: DispatchWorkItemFlags.inheritQoS, execute: {
+                
+                self.GetAstronomyAPIResult(completion: {
+                    
+                    let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Astronomy, header: newWeather!)
+                    newWeather!.addToDetail(detail)
+                    print("Get Astronomy")
+                    group.leave()
+                })
+            })
+            
+            //4
+            group.enter()
+            queue.async(group: group, qos: DispatchQoS.userInitiated, flags: DispatchWorkItemFlags.inheritQoS, execute: {
+                
+                self.GetForecastAPIResult(completion: {
+                    
+                    let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Forecast, header: newWeather!)
+                    newWeather!.addToDetail(detail)
+                    print("Get Forecast")
+                    group.leave()
+                })
+            })
+            
+            //5
+            group.enter()
+            queue.async(group: group, qos: DispatchQoS.userInitiated, flags: DispatchWorkItemFlags.inheritQoS, execute: {
+                
+                self.GetHourlyAPIResult(completion: {
+                    
+                    let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Hourly, header: newWeather!)
+                    newWeather!.addToDetail(detail)
+                    print("Get Hourly")
+                    group.leave()
+                    
+                })
+            })
+            
+            //6
+            group.enter()
+            queue.async(group: group, qos: DispatchQoS.userInitiated, flags: DispatchWorkItemFlags.inheritQoS , execute: {
+                
+                self.GetForecast10DaysAPIResult(completion: {
+                    
+                    let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather!)
+                    newWeather!.addToDetail(detail)
+                    print("Get Forecast 10 Days")
+                    group.leave()
+                })
+            })
+            
+            //7
+            group.notify(queue: DispatchQueue.main, execute: {
+                _ = try! RepositoryBase.shared.Save()
+                print("Saved Result")
+                completion()
+            })
+            
         })
-    }
-    
-    private func retrieveWeatherAPIResult(){
-        
-        let queue = DispatchQueue(label: "ios.WeatherApp.WeatherAPI")
-        let group = DispatchGroup()
-        
-        var newLocation:Location?
-        var newWeather:Weather?
-        
-        //1
-        group.enter()
-        queue.async { 
-            
-            self.GetLocationZMW(completion: {
-                
-                newLocation = try! LocationRepo.shared.CreateOrReplace(self.userLocation!)
-                newWeather = try! WeatherRepo.shared.CreateWeather(on: self.today, at: newLocation)
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.autoLocation!, type: .AutoComplete, header: newWeather!)
-                newWeather!.addToDetail(detail)
-                
-                print("Get Location ZMW")
-                group.leave()
-            })
-        }
-        
-        //2
-        group.enter()
-        queue.async { 
-            
-            self.GetConditionAPIResult(completion: { 
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather!)
-                newWeather!.addToDetail(detail)
-                
-                print("Get Condition")
-                group.leave()
-            })
-        }
 
-        //3
-        group.enter()
-        queue.async { 
-            
-            self.GetAstronomyAPIResult(completion: {
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Astronomy, header: newWeather!)
-                newWeather!.addToDetail(detail)
-                
-                print("Get Astronomy")
-                group.leave()
-            })
-        }
-        
-        //4
-        group.enter()
-        queue.async { 
-            
-            self.GetForecastAPIResult(completion: { 
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Forecast, header: newWeather!)
-                newWeather!.addToDetail(detail)
-                
-                print("Get Forecast")
-                group.leave()
-            })
-        }
-        
-        //5
-        group.enter()
-        queue.async { 
-            
-            self.GetHourlyAPIResult(completion: { 
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Hourly, header: newWeather!)
-                newWeather!.addToDetail(detail)
-                
-                print("Get Hourly")
-                group.leave()
-
-            })
-        }
-            
-        //6
-        group.enter()
-        queue.async { 
-            
-            self.GetForecast10DaysAPIResult(completion: { 
-                
-                let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather!)
-                newWeather!.addToDetail(detail)
-            
-                print("Get forecast 10")
-                group.leave()
-            })
-        }
-        
-        //7
-        group.notify(queue: DispatchQueue.main, execute: {
-             _ = try! RepositoryBase.shared.Save()
-            print("Save")
-        })
     }
 
 }

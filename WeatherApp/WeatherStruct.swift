@@ -694,7 +694,7 @@ public class Forecast10Result: IWeatherResult{
     public override func encode(with aCoder: NSCoder) {
         
         //forecastText
-        for i in 0...19 {
+        for i in 0...self.forecastText.count-1 {
             aCoder.encode(self.forecastText[i].period, forKey:"forecastText.period.\(i)")
             aCoder.encode(self.forecastText[i].title, forKey:"forecastText.title.\(i)")
             aCoder.encode(self.forecastText[i].description, forKey:"forecastText.desc.\(i)")
@@ -702,7 +702,7 @@ public class Forecast10Result: IWeatherResult{
         }
         
         //simple forecast
-        for i in 0...9 {
+        for i in 0...self.simplyForecast.count-1 {
             
             aCoder.encode(self.simplyForecast[i].period, forKey:"simplyForecast.period.\(i)")
             
