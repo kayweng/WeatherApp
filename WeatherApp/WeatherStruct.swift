@@ -75,18 +75,28 @@ public class AutoLocationResult : IWeatherResult{
         
         if let result = json["RESULTS"] as? NSArray{
         
-            let info = (result as JSONArray).first as! JSONDictionary
-            
-            name = info["name"] as! String
-            type = info["type"] as! String
-            country = info["c"] as! String
-            zmw = info["zmw"] as! String
-            tz = info["tz"] as! String
-            tzs = info["tzs"] as! String
-            queryString = info["l"] as! String
-            coordination = info["ll"] as! String
-            latitude = info["lat"] as! String
-            longitude = info["lon"] as! String
+            //let info = (result as JSONArray).first as! JSONDictionary
+             
+            for re in result as JSONArray{
+             
+               let info = re as! JSONDictionary
+               
+               if info["c"].upper == gCountryCode.upper && info["type"] == "city" {
+                
+                     name = info["name"] as! String
+                     type = info["type"] as! String
+                     country = info["c"] as! String
+                     zmw = info["zmw"] as! String
+                     tz = info["tz"] as! String
+                     tzs = info["tzs"] as! String
+                     queryString = info["l"] as! String
+                     coordination = info["ll"] as! String
+                     latitude = info["lat"] as! String
+                     longitude = info["lon"] as! String
+                
+                     break
+               }
+            }
         }
     }
     
