@@ -46,7 +46,8 @@ class WeatherAPI {
     // MARK: - API Functions
     public func GetLocationZMW(at location:String,completion:@escaping (_ result:Container<AutoLocationResult>)->Void){
     
-        let url = "http://autocomplete.wunderground.com/aq?query="+location
+        let url = "http://autocomplete.wunderground.com/aq?query=" + location + "&c=" + gCountryCode
+        
         ApiHelper.sendApiRequest(at: url, method: "GET") { (json) in
             
             var result:Container<AutoLocationResult> = Container<AutoLocationResult>()

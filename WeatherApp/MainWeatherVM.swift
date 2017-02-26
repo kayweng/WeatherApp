@@ -26,8 +26,21 @@ public class MainWeatherVM {
     
     let today = Date().now
     
-    public init(location:UserLocation, completion:@escaping ()->Void){
-        
+    public init(){
+        // fake,empty instantiated
+    }
+    
+//    public convenience init(location:UserLocation, completion:@escaping ()->Void){
+//        self.init()
+//        
+//        self.userLocation = location
+//        self.retrieveWeatherInfo(override: false) {
+//            completion()
+//        }
+//    }
+    
+    public func initWeatherResult(location:UserLocation, completion:@escaping ()->Void){
+       
         self.userLocation = location
         self.retrieveWeatherInfo(override: false) {
             completion()
@@ -37,10 +50,18 @@ public class MainWeatherVM {
     // MARK: - Public Functions
     public func retrieveWeatherInfo(override:Bool = false, completion:@escaping ()->Void){
         
-        if override || self.isNeededReloadWeather() {
+        if true || self.checkLastSavedWeather() {
             
-            self.retrieveWeatherAPIResult(completion: {
-                completion()
+            self.retrieveWeatherAPIResult(city: self.userLocation!.city!, completion: { (done) in
+                
+                if done{
+                    completion()
+                }else{
+                    //try use country code
+                    self.retrieveWeatherAPIResult(city: self.userLocation!.country!, completion: { (done) in
+                        completion()
+                    })
+                }
             })
             
         }else{
@@ -52,7 +73,7 @@ public class MainWeatherVM {
     }
     
     // MARK: - Private Functions
-    private func isNeededReloadWeather() -> Bool{
+    private func checkLastSavedWeather() -> Bool{
     
         var isNewLocation = false
         var isWeatherExpired = false
@@ -67,11 +88,12 @@ public class MainWeatherVM {
                 if let lastWeather = try WeatherRepo.shared.GetWeather(on: self.today, at: lastLocation) {
                     
                     if let lastModifiedDate = lastWeather.modifiedOn as? Date{
-                        isWeatherExpired = lastModifiedDate.elapsedInMinutes(Date().now) < 15 ? false : true
+                        isWeatherExpired = lastModifiedDate.elapsedInMinutes(Date().now) < 60 ? false : true
                     }
                     
                     if isWeatherExpired{
-                        let _ = WeatherRepo.shared.RemoveWeahter(lastWeather.weatherID!)
+                        //let _ = WeatherRepo.shared.RemoveWeahter(lastWeather.weatherID!)
+                        _ = WeatherRepo.shared.RemoveWeatherAt(location: lastLocation!)
                     }
                 }
             }
@@ -118,7 +140,7 @@ public class MainWeatherVM {
                     }
                 }
             }
-            
+            print("Retrieved Last Saved Weather Result")
             completion()
 
         }catch CoreDataError.ReadError{
@@ -179,10 +201,15 @@ public class MainWeatherVM {
         })
     }
     
-    private func retrieveWeatherAPIResult(completion:@escaping ()->Void){
+    private func retrieveWeatherAPIResult(city:String, completion:@escaping (_ valid:Bool)->Void){
         
-        WeatherAPI.shared.GetLocationZMW(at: self.userLocation.city!, completion: { (result) in
+        WeatherAPI.shared.GetLocationZMW(at: city, completion: { (result) in
         
+            if result.item[0].queryString.isEmpty{
+                completion(false)
+                return
+            }
+            
             let queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)
             let group = DispatchGroup()
             
@@ -198,7 +225,7 @@ public class MainWeatherVM {
             let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.autoLocation!, type: .AutoComplete, header: newWeather!)
             newWeather!.addToDetail(detail)
             
-            print("Get Location ZMW")
+            print("Found Auto Location : \(newLocation!.locationName)")
             
             //2
             group.enter()
@@ -208,7 +235,7 @@ public class MainWeatherVM {
                     
                     let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.conditions!, type: .Condition, header: newWeather!)
                     newWeather!.addToDetail(detail)
-                    print("Get Condition")
+                    print("Saving the Condition Result")
                     group.leave()
                 })
             })
@@ -221,7 +248,7 @@ public class MainWeatherVM {
                     
                     let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.astronomy!, type: .Astronomy, header: newWeather!)
                     newWeather!.addToDetail(detail)
-                    print("Get Astronomy")
+                    print("Saving the Astronomy Result")
                     group.leave()
                 })
             })
@@ -234,7 +261,7 @@ public class MainWeatherVM {
                     
                     let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.forecast!, type: .Forecast, header: newWeather!)
                     newWeather!.addToDetail(detail)
-                    print("Get Forecast")
+                    print("Saving the Forecast Result")
                     group.leave()
                 })
             })
@@ -247,7 +274,7 @@ public class MainWeatherVM {
                     
                     let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.hourly!, type: .Hourly, header: newWeather!)
                     newWeather!.addToDetail(detail)
-                    print("Get Hourly")
+                    print("Saving the Hourly Result")
                     group.leave()
                     
                 })
@@ -261,7 +288,7 @@ public class MainWeatherVM {
                     
                     let detail = WeatherDetailRepo.shared.CreateWeatherDetail(self.daily!, type: .Forecast10Day, header: newWeather!)
                     newWeather!.addToDetail(detail)
-                    print("Get Forecast 10 Days")
+                    print("Saving the Forecast 10 Days Result")
                     group.leave()
                 })
             })
@@ -269,8 +296,8 @@ public class MainWeatherVM {
             //7
             group.notify(queue: DispatchQueue.main, execute: {
                 _ = try! RepositoryBase.shared.Save()
-                print("Saved Result")
-                completion()
+                print("Saved all weather results")
+                completion(true)
             })
             
         })

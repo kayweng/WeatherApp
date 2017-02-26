@@ -73,15 +73,19 @@ public class AutoLocationResult : IWeatherResult{
     init(_ json:JSONDictionary){
         super.init()
         
-        if let result = json["RESULTS"] as? NSArray{
+        if let result = json["RESULTS"] as? NSArray, json["RESULTS"]!.count > 0{
         
             //let info = (result as JSONArray).first as! JSONDictionary
              
             for re in result as JSONArray{
              
                let info = re as! JSONDictionary
-               
-               if info["c"].upper == gCountryCode.upper && info["type"] == "city" {
+               let c = info["c"] as! String
+               let ty = info["type"] as! String
+                
+               if c.uppercased() == gCountryCode.uppercased()
+                    && ty.uppercased() == "CITY"
+               {
                 
                      name = info["name"] as! String
                      type = info["type"] as! String

@@ -237,12 +237,86 @@
             </objects>
             <point key="canvasLocation" x="868" y="-188.45577211394306"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="nKb-72-aoO">
+            <objects>
+                <viewController id="9Oe-eD-fXX" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xoo-Ic-OBK"/>
+                        <viewControllerLayoutGuide type="bottom" id="w0t-Ql-7Tt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="t0g-9f-8hB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0M7-G3-VLb">
+                                <rect key="frame" x="37" y="133" width="300" height="400"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IuY-ch-8OC">
+                                        <rect key="frame" x="115" y="362" width="70" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="wAH-2l-cBF"/>
+                                            <constraint firstAttribute="width" constant="70" id="ydq-ld-FEJ"/>
+                                        </constraints>
+                                        <state key="normal" title="Close"/>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="place message here" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XqA-r7-Hjg">
+                                        <rect key="frame" x="8" y="175" width="284" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="8cW-U1-BN6"/>
+                                        </constraints>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                    </textView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Settings_32" translatesAutoresizingMaskIntoConstraints="NO" id="Iup-nB-V6W">
+                                        <rect key="frame" x="134" y="123" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="7e4-pJ-jDI"/>
+                                            <constraint firstAttribute="width" constant="32" id="wy8-pw-AnZ"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="IuY-ch-8OC" firstAttribute="centerX" secondItem="0M7-G3-VLb" secondAttribute="centerX" id="991-Bx-bDC"/>
+                                    <constraint firstItem="Iup-nB-V6W" firstAttribute="centerX" secondItem="0M7-G3-VLb" secondAttribute="centerX" id="BHm-tu-kB5"/>
+                                    <constraint firstItem="Iup-nB-V6W" firstAttribute="centerX" secondItem="XqA-r7-Hjg" secondAttribute="centerX" id="N8p-AY-ub5"/>
+                                    <constraint firstItem="XqA-r7-Hjg" firstAttribute="centerX" secondItem="0M7-G3-VLb" secondAttribute="centerX" id="NPz-vH-UFr"/>
+                                    <constraint firstAttribute="height" constant="400" id="S0s-z1-eUM"/>
+                                    <constraint firstAttribute="width" constant="300" id="acG-3D-Ter"/>
+                                    <constraint firstAttribute="trailing" secondItem="XqA-r7-Hjg" secondAttribute="trailing" constant="8" id="o5h-bQ-Nn5"/>
+                                    <constraint firstItem="XqA-r7-Hjg" firstAttribute="top" secondItem="Iup-nB-V6W" secondAttribute="bottom" constant="20" id="ptS-U8-gVI"/>
+                                    <constraint firstAttribute="bottom" secondItem="IuY-ch-8OC" secondAttribute="bottom" constant="8" id="roO-pA-1A3"/>
+                                    <constraint firstItem="XqA-r7-Hjg" firstAttribute="leading" secondItem="0M7-G3-VLb" secondAttribute="leading" constant="8" id="rwZ-Ut-EQk"/>
+                                    <constraint firstItem="XqA-r7-Hjg" firstAttribute="centerY" secondItem="0M7-G3-VLb" secondAttribute="centerY" id="soB-F8-oW2"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="0M7-G3-VLb" firstAttribute="centerX" secondItem="t0g-9f-8hB" secondAttribute="centerX" id="W8H-cO-xLR"/>
+                            <constraint firstItem="0M7-G3-VLb" firstAttribute="centerY" secondItem="t0g-9f-8hB" secondAttribute="centerY" id="gZh-AH-uZe"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mek-vB-QQr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1725.5999999999999" y="-188.45577211394306"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="R9n-Va-Uhc">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8cl-t0-HaG" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="yZN-tr-Gnj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yZN-tr-Gnj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -743,6 +817,7 @@
         <image name="Double Up_50" width="50" height="50"/>
         <image name="Near Me" width="25" height="25"/>
         <image name="Settings" width="32" height="32"/>
+        <image name="Settings_32" width="32" height="32"/>
         <image name="Sunrise_25" width="25" height="25"/>
         <image name="Sunset_25" width="25" height="25"/>
         <image name="Unknown" width="50" height="50"/>

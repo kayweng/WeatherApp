@@ -14,6 +14,7 @@ protocol IWeatherRepo : IRepositoryBase {
     func CreateWeather(on date: Date,at location:Location?) throws -> Weather?
     func GetWeather(on date:Date,at location:Location?) throws -> Weather?
     func RemoveWeahter(_ id:String)
+    func RemoveWeatherAt(location:Location)
 }
 
 class WeatherRepo : RepositoryBase, IWeatherRepo{
@@ -61,6 +62,19 @@ class WeatherRepo : RepositoryBase, IWeatherRepo{
         }
         
         return weather.count > 0 ? weather.first! : nil
+    }
+    
+    internal func RemoveWeatherAt(location:Location){
+        
+        let pred = NSPredicate(format: "location =%@", location)
+        
+        do {
+            let _ = try self.Delete(pred: pred, in: Entity.Weather)
+        }catch CoreDataError.DeleteError{
+            
+        }catch _{
+            
+        }
     }
     
     internal func RemoveWeahter(_ id:String){

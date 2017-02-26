@@ -42,7 +42,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     var counter:Int = 0
     var timer = Timer()
     var isExpand = false
-    
+    var isNetworkUnReachable = false
     
     var shortcutWD:[(icon:String,value:String)] = []
     var weatherDesc:String = ""{
@@ -51,24 +51,15 @@ class MainController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    var vm:MainWeatherVM?{
-        didSet{
-            self.populateConditionsResult()
-            self.populateAstronomyResult()
-            self.populateForecastResult()
-            self.populateHourlyResult()
-            self.populateForecast10DaysResult()
-        }
-    }
+    var vm:MainWeatherVM = MainWeatherVM()
     
     // MARK: - Screen Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        LocationManager.shared.locationManager.delegate = self
-        
         self.weatherView.backgroundColor = .clear
-        self.weatherView.backgroundColor = UIColor(patternImage: UIImage(named: "bg-night")!)
+        
+        self.weatherView.backgroundColor = StaticFactory.currentPartOfDay() == PartsOfDay.Night ? UIColor(patternImage: UIImage(named: "bg-night")!) : UIColor(patternImage: UIImage(named: "bg-sky")!)
         
         self.tblTaskingList.register(UINib(nibName: "WorkingListCell", bundle: nil), forCellReuseIdentifier: "Cell")
         self.tblTaskingList.estimatedRowHeight = CGFloat(100)
@@ -81,6 +72,14 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        guard isNetworkUnReachable else {
+            //self.alert(title: "Error", message: "No Internet Connection")
+            
+            
+            
+            return
+        }
         
         if self.timer.timeInterval <= 0 {
             self.initConstantHeights()
@@ -123,15 +122,21 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     }
     
     // MARK : - Private Functions
-    private func initLocation(){
+    public func initLocation(){
         
         LocationManager.shared.GetNearestCity { (json) in
             
             let location = UserLocation(address: json)
             self.lblPlaceName.text = location.city
             
-            self.vm = MainWeatherVM(location: location, completion: { 
-                
+            self.vm.initWeatherResult(location: location, completion: { 
+                print("View Model is instantiated")
+                self.populateConditionsResult()
+                self.populateAstronomyResult()
+                self.populateForecastResult()
+                self.populateHourlyResult()
+                self.populateForecast10DaysResult()
+                print("Done Weather Result population")
             })
         }
     }
@@ -176,7 +181,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     // MARK: - Populate Weather Results
     private func populateConditionsResult(){
         
-        if let cond = self.vm!.conditions{
+        if let cond = self.vm.conditions{
             
             //Update Condition Page
             if let _ = self.container, let pCtrl = self.container!.pageController{
@@ -202,8 +207,8 @@ class MainController: UIViewController, CLLocationManagerDelegate {
                 self.shortcutWD.append(("temperature_25"," Feels Like \(cond.feel.fahrenheit.localize(format: "%.0f"))".degreeFormat))
             }
             
-            self.shortcutWD.append(("wind_25"," \(cond.wind.dir), \(cond.wind.mph)MPH"))
-            self.shortcutWD.append(("visible_25"," Visiblity \(cond.visibility.km)KM"))
+            self.shortcutWD.append(("wind_25"," \(cond.wind.dir), \(cond.wind.mph) MPH"))
+            self.shortcutWD.append(("visible_25"," Visiblity \(cond.visibility.km) KM"))
             self.shortcutWD.append(("uv_25","\(cond.uv.uvDescription)"))
             
             if self.shortcutWD.count > 0 && self.timer.timeInterval <= 0{
@@ -220,7 +225,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateAstronomyResult(){
         
-        if let astro = self.vm!.astronomy{
+        if let astro = self.vm.astronomy{
             
             //Update Condition Page
             if let _ = self.container, let pCtrl = self.container!.pageController{
@@ -239,7 +244,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateForecastResult(){
         
-        if let fc = self.vm!.forecast{
+        if let fc = self.vm.forecast{
             
             //Update Condition Page
             if let _ = self.container, let pCtrl = self.container!.pageController{
@@ -255,14 +260,14 @@ class MainController: UIViewController, CLLocationManagerDelegate {
             let highTemp = gTemperatureUnit == .Celsius ? todayFC.high.celsius.degreeFormat : todayFC.high.fahrenheit.degreeFormat
             let lowTemp = gTemperatureUnit == .Celsius ? todayFC.low.celsius.degreeFormat : todayFC.low.fahrenheit.degreeFormat
             
-            self.shortcutWD.append(("temperature_25","\(lowTemp) / \(highTemp)"))
+            self.shortcutWD.append(("temperature_25","  \(lowTemp) / \(highTemp)"))
             self.lblMaxMinTemperature.text = "\(lowTemp) / \(highTemp)"
         }
     }
     
     private func populateHourlyResult(){
         
-        if let hr = self.vm!.hourly{
+        if let hr = self.vm.hourly{
             
             if let _ = self.container, let pCtrl = self.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
@@ -273,7 +278,7 @@ class MainController: UIViewController, CLLocationManagerDelegate {
     
     private func populateForecast10DaysResult(){
         
-        if let daily = self.vm!.daily{
+        if let daily = self.vm.daily{
             
             if let _ = self.container, let pCtrl = self.container!.pageController{
                 let o = pCtrl.pages[1] as! Condition2PageController
