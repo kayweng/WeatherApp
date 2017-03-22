@@ -1,9 +1,11 @@
 # WeatherApp
-A mobile application which shows weather information according phone location and also provides multiple functions to convenience
-user activity which dependent or related weather conditions.
+An iOS mobile app which retrieve weather forecast data for analytics journey trip, forecast laundry and planner. The weather data is according user's mobile phone location and store them in the coredata.
 
-Functions are developing and them will be listing soon.
-
+Main Features:
+1. Today Weather Forecast
+2. Journey 
+3. Laundry
+4. Planner
 
 # License
 Copyright 2017 @SnackCode
