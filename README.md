@@ -1,11 +1,6 @@
 # WeatherApp
-An iOS mobile app which retrieve weather forecast data for analytics journey trip, forecast laundry and planner. The weather data is according user's mobile phone location and store them in the coredata.
+An iOS mobile app which retrieves weather forecast data for analytics your journey trip, forecast laundry time and planner. 
 
-Main Features:
-1. Today Weather Forecast
-2. Journey 
-3. Laundry
-4. Planner
 
 # License
 Copyright 2017 @SnackCode
