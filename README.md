@@ -1,4 +1,4 @@
-# WeatherApp
+# WeatherApp (Retired)
 An iOS mobile app which retrieves weather forecast data for analytics your journey trip, forecast laundry time and planner. 
 
 
